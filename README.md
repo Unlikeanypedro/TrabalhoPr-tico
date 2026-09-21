@@ -1,2 +1,2 @@
-# TrabalhoPr-tico
-Trabalho pratico de de progrmação modular
+# Trabalho Prático
+Trabalho prático de programação modular
