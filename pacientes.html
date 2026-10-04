@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pacientes · Sistema Hospitalar</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="cabecalho">
+      <div class="cabecalho-interno">
+        <a class="marca" href="index.html">
+          <span class="marca-simbolo"></span>
+          <span class="marca-texto"
+            ><strong>Sistema Hospitalar</strong
+            ><span class="marca-subtitulo">Gestão de atendimentos</span></span
+          >
+        </a>
+        <nav id="menu-principal">
+          <a href="index.html">Painel</a>
+          <a href="pacientes.html" class="ativo">Pacientes</a>
+          <a href="profissionais.html">Profissionais</a>
+          <a href="consultas.html">Consultas</a>
+          <a href="internacoes.html">Internações</a>
+          <a href="quartos.html">Quartos</a>
+          <a href="historico.html">Histórico médico</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <p class="caminho">Início › Pacientes</p>
+      <div class="titulo-pagina">
+        <h1>Pacientes</h1>
+        <a class="botao" href="#novo-paciente">Novo paciente</a>
+      </div>
+
+      <section class="painel">
+        <h2>Filtrar pacientes</h2>
+        <form id="formulario-filtro" class="filtros" action="#">
+          <label for="filtro-nome"
+            >Nome
+            <input
+              type="search"
+              id="filtro-nome"
+              name="filtro-nome"
+              placeholder="Nome ou parte do nome"
+            />
+          </label>
+          <label for="filtro-cpf"
+            >CPF
+            <input
+              type="text"
+              id="filtro-cpf"
+              name="filtro-cpf"
+              placeholder="000.000.000-00"
+            />
+          </label>
+          <label for="filtro-cidade"
+            >Cidade
+            <input type="text" id="filtro-cidade" name="filtro-cidade" />
+          </label>
+          <label for="filtro-ordem"
+            >Ordenar por
+            <select id="filtro-ordem" name="filtro-ordem">
+              <option>Nome (A–Z)</option>
+              <option>Nome (Z–A)</option>
+              <option>Cadastro mais recente</option>
+            </select>
+          </label>
+          <div class="botoes">
+            <button type="button" id="botao-filtrar">Filtrar</button>
+            <button type="button" class="secundario" id="botao-limpar-filtros">
+              Limpar filtros
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section>
+        <p class="resumo" id="resumo-resultados">Exibindo 5 de 128 pacientes</p>
+        <div class="tabela-rolavel">
+          <table id="tabela-pacientes">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Nascimento</th>
+                <th>Telefone</th>
+                <th>Cidade</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Ana Beatriz Souza</td>
+                <td>111.222.333-44</td>
+                <td>12/03/1990</td>
+                <td>(31) 99999-0001</td>
+                <td>Belo Horizonte</td>
+                <td>
+                  <a class="botao secundario" href="historico.html"
+                    >Histórico</a
+                  >
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <button type="button" class="secundario botao-excluir">
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Carlos Henrique Lima</td>
+                <td>555.666.777-88</td>
+                <td>25/07/1978</td>
+                <td>(31) 99999-0002</td>
+                <td>Contagem</td>
+                <td>
+                  <a class="botao secundario" href="historico.html"
+                    >Histórico</a
+                  >
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <button type="button" class="secundario botao-excluir">
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Fernanda Oliveira Rocha</td>
+                <td>222.333.444-55</td>
+                <td>03/11/2001</td>
+                <td>(31) 99999-0003</td>
+                <td>Betim</td>
+                <td>
+                  <a class="botao secundario" href="historico.html"
+                    >Histórico</a
+                  >
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <button type="button" class="secundario botao-excluir">
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>João Pedro Martins</td>
+                <td>333.444.555-66</td>
+                <td>19/09/1965</td>
+                <td>(31) 99999-0004</td>
+                <td>Nova Lima</td>
+                <td>
+                  <a class="botao secundario" href="historico.html"
+                    >Histórico</a
+                  >
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <button type="button" class="secundario botao-excluir">
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Marina Duarte Alves</td>
+                <td>444.555.666-77</td>
+                <td>08/01/2015</td>
+                <td>(31) 99999-0005</td>
+                <td>Sabará</td>
+                <td>
+                  <a class="botao secundario" href="historico.html"
+                    >Histórico</a
+                  >
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <button type="button" class="secundario botao-excluir">
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <nav class="paginacao" id="paginacao">
+          <button type="button" class="secundario" id="botao-anterior">
+            Anterior
+          </button>
+          <button type="button" class="secundario" id="botao-proximo">
+            Próximo
+          </button>
+        </nav>
+      </section>
+
+      <section class="painel" id="novo-paciente">
+        <h2>Cadastrar paciente</h2>
+        <form id="formulario-paciente" action="#">
+          <div class="grupo">
+            <h3>Dados pessoais</h3>
+            <label for="nome" class="largura-total"
+              >Nome completo
+              <input type="text" id="nome" name="nome" />
+            </label>
+            <label for="cpf"
+              >CPF
+              <input
+                type="text"
+                id="cpf"
+                name="cpf"
+                placeholder="000.000.000-00"
+              />
+            </label>
+            <label for="data-nascimento"
+              >Data de nascimento
+              <input type="date" id="data-nascimento" name="dataNascimento" />
+            </label>
+          </div>
+          <div class="grupo">
+            <h3>Contato</h3>
+            <label for="telefone"
+              >Telefone
+              <input type="tel" id="telefone" name="telefone" />
+            </label>
+            <label for="email"
+              >E-mail
+              <input type="email" id="email" name="email" />
+            </label>
+          </div>
+          <div class="grupo">
+            <h3>Endereço</h3>
+            <label for="logradouro" class="largura-total"
+              >Logradouro
+              <input type="text" id="logradouro" name="logradouro" />
+            </label>
+            <label for="numero"
+              >Número
+              <input type="text" id="numero" name="numero" />
+            </label>
+            <label for="bairro"
+              >Bairro
+              <input type="text" id="bairro" name="bairro" />
+            </label>
+            <label for="cidade"
+              >Cidade
+              <input type="text" id="cidade" name="cidade" />
+            </label>
+            <label for="estado"
+              >Estado
+              <input type="text" id="estado" name="estado" />
+            </label>
+            <label for="cep"
+              >CEP
+              <input type="text" id="cep" name="cep" />
+            </label>
+          </div>
+          <div class="botoes">
+            <button type="button" id="botao-salvar">Salvar paciente</button>
+            <button type="button" class="secundario" id="botao-limpar">
+              Limpar
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
