@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Consultas</title>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+
+    <body>
+        <header class="cabecalho">
+            <div class="cabecalho-interno">
+                <a class="marca" href="index.html">Sistema Hospitalar</a>
+
+                <nav id="menu-principal">
+                    <a href="index.html">Painel</a>
+                    <a href="pacientes.html">Pacientes</a>
+                    <a href="profissionais.html">Profissionais</a>
+                    <a href="consultas.html" class="ativo">Consultas</a>
+                    <a href="internacoes.html">Internações</a>
+                    <a href="quartos.html">Quartos</a>
+                    <a href="historico.html">Histórico médico</a>
+                </nav>
+            </div>
+        </header>
+
+        <main id="conteudo">
+            <p class="caminho">Início > Consultas</p>
+
+            <div class="titulo-pagina">
+                <h1>Consultas</h1>
+
+                <a class="botao" href="#nova-consulta">Nova consulta</a>
+            </div>
+
+            <section class="painel">
+                <h2>Filtrar consultas</h2>
+
+                <form id="formulario-filtro" class="filtros" action="#">
+                    <label for="filtro-data"
+                        >Data
+
+                        <input type="date" id="filtro-data" name="filtroData" />
+                    </label>
+
+                    <label for="filtro-profissional"
+                        >Profissional
+
+                        <select
+                            id="filtro-profissional"
+                            name="filtroProfissional"
+                        >
+                            <option>Todos</option>
+                            <option>Profissional 1</option>
+                            <option>Profissional 2</option>
+                            <option>Profissional 3</option>
+                        </select>
+                    </label>
+
+                    <label for="filtro-situacao"
+                        >Tipo
+
+                        <select id="filtro-situacao" name="filtroSituacao">
+                            <option>Todos</option>
+                            <option>Tipo 1</option>
+                            <option>Tipo 2</option>
+                            <option>Tipo 3</option>
+                        </select>
+                    </label>
+
+                    <label for="filtro-ordem"
+                        >Ordenar por
+
+                        <select id="filtro-ordem" name="filtroOrdem">
+                            <option>Data (crescente)</option>
+                            <option>Data (decrescente)</option>
+                            <option>Profissional (crescente)</option>
+                            <option>Profissional (decrescente)</option>
+                            <option>Tipo (crescente)</option>
+                            <option>Tipo (decrescente)</option>
+                        </select>
+                    </label>
+
+                    <div class="botoes">
+                        <button type="button" id="botao-filtrar">
+                            Filtrar
+                        </button>
+
+                        <button
+                            type="button"
+                            class="secundario"
+                            id="botao-limpar-filtros"
+                        >
+                            Limpar filtros
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <section>
+                <p class="resumo" id="resumo-resultados">
+                    Exibindo 3 de 24 consultas
+                </p>
+
+                <div class="tabela-rolavel">
+                    <table id="tabela-quartos">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Profissional</th>
+                                <th>Tipo</th>
+                                <th>Situação</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>2001-01-01</td>
+                                <td>Profissional 1</td>
+                                <td>Tipo 1</td>
+                                <td>
+                                    <span class="situacao-disponivel"
+                                        >Agendada</span
+                                    >
+                                </td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="secundario botao-editar"
+                                    >
+                                        Editar
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="secundario botao-excluir"
+                                    >
+                                        Excluir
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>2002-02-02</td>
+                                <td>Profissional 2</td>
+                                <td>Tipo 2</td>
+                                <td>
+                                    <span class="situacao-ocupado"
+                                        >Cancelada</span
+                                    >
+                                </td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="secundario botao-editar"
+                                    >
+                                        Editar
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="secundario botao-excluir"
+                                    >
+                                        Excluir
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>2003-03-03</td>
+                                <td>Profissional 3</td>
+                                <td>Tipo 3</td>
+                                <td>
+                                    <span class="situacao-disponivel"
+                                        >Agendada</span
+                                    >
+                                </td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="secundario botao-editar"
+                                    >
+                                        Editar
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="secundario botao-excluir"
+                                    >
+                                        Excluir
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <nav class="paginacao" id="paginacao">
+                    <button
+                        type="button"
+                        class="secundario"
+                        id="botao-anterior"
+                        disabled
+                    >
+                        Anterior
+                    </button>
+
+                    <button type="button" class="secundario" id="botao-proximo">
+                        Próximo
+                    </button>
+                </nav>
+            </section>
+        </main>
+    </body>
+</html>
