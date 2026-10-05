@@ -263,3 +263,20 @@ button:disabled {
 .largura-total {
   grid-column: 1/-1;
 }
+.dados-paciente {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px 16px;
+  margin: 0;
+}
+.dados-paciente p {
+  margin: 0;
+  font-weight: 500;
+}
+.lista-informacoes {
+  margin: 0;
+  padding-left: 18px;
+}
+.lista-informacoes li {
+  margin-bottom: 4px;
+}

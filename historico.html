@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Histórico médico Sistema Hospitalar</title>
+    <link rel="stylesheet" href="css/estilo.css" />
+  </head>
+  <body>
+    <header class="cabecalho">
+      <div class="cabecalho-interno">
+        <a class="marca" href="index.html">
+          <span class="marca-simbolo"></span>
+          <span class="marca-texto"
+            ><strong>Sistema Hospitalar</strong
+            ><span class="marca-subtitulo">Gestão de atendimentos</span></span
+          >
+        </a>
+        <nav id="menu-principal">
+          <a href="index.html">Painel</a>
+          <a href="pacientes.html">Pacientes</a>
+          <a href="profissionais.html">Profissionais</a>
+          <a href="consultas.html">Consultas</a>
+          <a href="internacoes.html">Internações</a>
+          <a href="quartos.html">Quartos</a>
+          <a href="historico.html" class="ativo">Histórico médico</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <p class="caminho">Início › Histórico médico</p>
+      <div class="titulo-pagina">
+        <h1>Histórico médico</h1>
+      </div>
+
+      <section class="painel">
+        <h2>Selecionar paciente</h2>
+        <form id="formulario-historico" class="filtros" action="#">
+          <label for="paciente"
+            >Paciente
+            <select id="paciente" name="paciente">
+              <option>Ana Beatriz Souza</option>
+              <option>Carlos Henrique Lima</option>
+              <option>Fernanda Oliveira Rocha</option>
+              <option>João Pedro Martins</option>
+              <option>Marina Duarte Alves</option>
+            </select>
+          </label>
+          <div class="botoes">
+            <button type="button" id="botao-consultar">
+              Consultar histórico
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="painel">
+        <h2>Dados do paciente</h2>
+        <div class="dados-paciente" id="dados-paciente">
+          <p><strong>Nome:</strong> Ana Beatriz Souza</p>
+          <p><strong>CPF:</strong> 111.222.333-44</p>
+          <p><strong>Data de nascimento:</strong> 12/03/1990</p>
+          <p><strong>Telefone:</strong> (31) 99999-0001</p>
+          <p><strong>E-mail:</strong> ana@email.com</p>
+          <p><strong>Cidade:</strong> Belo Horizonte</p>
+        </div>
+      </section>
+
+      <section class="painel">
+        <h2>Consultas realizadas</h2>
+        <div class="tabela-rolavel">
+          <table id="tabela-consultas">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Horário</th>
+                <th>Profissional</th>
+                <th>Motivo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>10/08/2026</td>
+                <td>08:30</td>
+                <td>Dra. Paula Reis (Cardiologia)</td>
+                <td>Check-up</td>
+              </tr>
+              <tr>
+                <td>02/09/2026</td>
+                <td>09:15</td>
+                <td>Dr. Rafael Costa (Ortopedia)</td>
+                <td>Retorno</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="painel">
+        <h2>Internações realizadas</h2>
+        <div class="tabela-rolavel">
+          <table id="tabela-internacoes">
+            <thead>
+              <tr>
+                <th>Entrada</th>
+                <th>Alta prevista</th>
+                <th>Alta efetiva</th>
+                <th>Quarto</th>
+                <th>Profissional</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>20/05/2026</td>
+                <td>24/05/2026</td>
+                <td>24/05/2026</td>
+                <td>101</td>
+                <td>Dra. Paula Reis (Cardiologia)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="painel">
+        <h2>Informações relevantes</h2>
+        <ul class="lista-informacoes" id="lista-informacoes">
+          <li>
+            <strong>10/08/2026</strong> — Exames de rotina solicitados durante a
+            consulta.
+          </li>
+          <li><strong>02/09/2026</strong> — Retorno recomendado em 30 dias.</li>
+          <li>
+            <strong>24/05/2026</strong> — Alta concedida após a evolução
+            clínica.
+          </li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
