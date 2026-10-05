@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quartos</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <header class="cabecalho">
+    <div class="cabecalho-interno">
+      <a class="marca" href="index.html">Sistema Hospitalar</a>
+      <nav id="menu-principal">
+        <a href="index.html" class="ativo">Painel</a>
+        <a href="pacientes.html">Pacientes</a>
+        <a href="profissionais.html">Profissionais</a>
+        <a href="consultas.html">Consultas</a>
+        <a href="internacoes.html">Internações</a>
+        <a href="quartos.html">Quartos</a>
+        <a href="historico.html">Histórico médico</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <p class="caminho">Início > Painel</p>
+    <div class="titulo-pagina">
+      <h1>Olá <span> @Username </span></h1>
+      <a class="botao" href="#novo-quarto">Nova consulta</a>
+    </div>
+    </section>
+
+    <section>
+      <p class="resumo" id="resumo-resultados">Suas consultas</p>
+      <div class="tabela-rolavel">
+        <table id="tabela-quartos">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Andar</th>
+              <th>Ocupação</th>
+              <th>Data e horário</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>101</td>
+              <td>1º</td>
+              <td>2</td>
+              <td><span class="situacao-disponivel">13:20 - 20/10/2026</span></td>
+              <td>
+                <button type="button" class="secundario botao-editar">
+                  Editar
+                </button>
+                <button type="button" class="secundario botao-excluir">
+                  Cancelar
+                </button>
+              </td>
+            </tr>
+            <tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="painel">
+      <div class="tabela-servicos">  
+        <h2>Serviços</h2>
+        
+        <div class="botoes">
+          <button type="button" >Filtrar</button>
+          <button type="button" href="index.html">Painel</button>
+          <button type="button" href="pacientes.html">Pacientes</button>
+          <button type="button" href="profissionais.html">Profissionais</button>
+          <button type="button" href="consultas.html">Consultas</button>
+          <button type="button" href="internacoes.html">Internações</button>
+          <button type="button" href="quartos.html">Quartos</button>
+        </div>
+      </div>
+      </section>
+
+    <button type="button" id="botao-filtrar" href="historico.html">Histórico médico</button>
+    
+  </main>
+</body>
+</html>
