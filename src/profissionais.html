@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Profissionais</title>
+</head>
+
+<body>
+    <header class="cabecalho">
+        <div class="cabecalho-interno">
+            <a class="marca" href="index.html">Sistema Hospitalar</a>
+            <nav id="menu-principal">
+                <a href="index.html">Painel</a>
+                <a href="pacientes.html">Pacientes</a>
+                <a href="profissionais.html" class="ativo">Profissionais</a>
+                <a href="consultas.html">Consultas</a>
+                <a href="internacoes.html">Internações</a>
+                <a href="quartos.html">Quartos</a>
+                <a href="historico.html">Histórico médico</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="conteudo">
+        <p class="caminho">inicio > Profissionais</p>
+        <div class="titulo-pagina">
+            <h1>Profissionais</h1>
+            <a class="botao" href="#"> #</a>
+        </div>
+
+        <section class="painel">
+            <h2>Procurar profissional</h2>
+            <form id="formulario-filtro" class="filtros" action="#">
+                <label for="filtro-nome">Nome
+                    <input type="search" id="filtro-nome" name="filtro-nome" placeholder="''Pedro Samuel''" />
+                </label>
+
+                <label for="filtro-cidade">Cargo
+                    <input type="text" id="filtro-cargo" name="filtro-cargo" placeholder="''Secretario''" />
+                </label>
+
+                <div class="botoes">
+                    <button type="button" class="secundario" id="botao-limpar-filtros">
+                        Limpar
+                    </button>
+                </div>
+            </form>
+        </section>
+        <label for="filtro-ordem">Ordenar por
+            <select id="filtro-ordem" name="filtro-ordem">
+                <option>Nome (A–Z)</option>
+                <option>Nome (Z–A)</option>
+            </select>
+        </label>
+    </main>
+
+</body>
+
+</html>
