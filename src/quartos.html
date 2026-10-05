@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Quartos</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="cabecalho">
+      <div class="cabecalho-interno">
+        <a class="marca" href="index.html">Sistema Hospitalar</a>
+        <nav id="menu-principal">
+          <a href="index.html">Painel</a>
+          <a href="pacientes.html">Pacientes</a>
+          <a href="profissionais.html">Profissionais</a>
+          <a href="consultas.html">Consultas</a>
+          <a href="internacoes.html">Internações</a>
+          <a href="quartos.html" class="ativo">Quartos</a>
+          <a href="historico.html">Histórico médico</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <p class="caminho">Início > Quartos</p>
+      <div class="titulo-pagina">
+        <h1>Quartos</h1>
+        <a class="botao" href="#novo-quarto">Novo quarto</a>
+      </div>
+
+      <section class="painel">
+        <h2>Filtrar quartos</h2>
+        <form id="formulario-filtro" class="filtros" action="#">
+          <label for="filtro-numero"
+            >Número
+            <input type="text" id="filtro-numero" name="filtroNumero" />
+          </label>
+          <label for="filtro-andar"
+            >Andar
+            <select id="filtro-andar" name="filtroAndar">
+              <option>Todos</option>
+              <option>1º andar</option>
+              <option>2º andar</option>
+              <option>3º andar</option>
+              <option>4º andar</option>
+            </select>
+          </label>
+          <label for="filtro-situacao"
+            >Situação
+            <select id="filtro-situacao" name="filtroSituacao">
+              <option>Todas</option>
+              <option>Disponível</option>
+              <option>Ocupado</option>
+            </select>
+          </label>
+          <label for="filtro-ordem"
+            >Ordenar por
+            <select id="filtro-ordem" name="filtroOrdem">
+              <option>Número (crescente)</option>
+              <option>Número (decrescente)</option>
+              <option>Andar</option>
+            </select>
+          </label>
+          <div class="botoes">
+            <button type="button" id="botao-filtrar">Filtrar</button>
+            <button type="button" class="secundario" id="botao-limpar-filtros">
+              Limpar filtros
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section>
+        <p class="resumo" id="resumo-resultados">Exibindo 5 de 24 quartos</p>
+        <div class="tabela-rolavel">
+          <table id="tabela-quartos">
+            <thead>
+              <tr>
+                <th>Número</th>
+                <th>Andar</th>
+                <th>Capacidade máxima</th>
+                <th>Ocupação</th>
+                <th>Situação</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>101</td>
+                <td>1º</td>
+                <td>2</td>
+                <td>0/2</td>
+                <td><span class="situacao-disponivel">Disponível</span></td>
+                <td>
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <button type="button" class="secundario botao-excluir">
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>102</td>
+                <td>1º</td>
+                <td>2</td>
+                <td>2/2</td>
+                <td><span class="situacao-ocupado">Ocupado</span></td>
+                <td>
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <button type="button" class="secundario botao-excluir">
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>204</td>
+                <td>2º</td>
+                <td>1</td>
+                <td>1/1</td>
+                <td><span class="situacao-ocupado">Ocupado</span></td>
+                <td>
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <button type="button" class="secundario botao-excluir">
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>205</td>
+                <td>2º</td>
+                <td>3</td>
+                <td>1/3</td>
+                <td><span class="situacao-disponivel">Disponível</span></td>
+                <td>
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <button type="button" class="secundario botao-excluir">
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>305</td>
+                <td>3º</td>
+                <td>4</td>
+                <td>2/4</td>
+                <td><span class="situacao-disponivel">Disponível</span></td>
+                <td>
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <button type="button" class="secundario botao-excluir">
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <nav class="paginacao" id="paginacao">
+          <button type="button" class="secundario" id="botao-anterior" disabled>
+            Anterior
+          </button>
+          <button type="button" class="secundario" id="botao-proximo">
+            Próximo
+          </button>
+        </nav>
+      </section>
+
+      <section class="painel" id="novo-quarto">
+        <h2>Cadastrar quarto</h2>
+        <form id="formulario-quarto" action="#">
+          <div class="grupo">
+            <h3>Dados do quarto</h3>
+            <label for="numero"
+              >Número de identificação
+              <input type="number" id="numero" name="numero" />
+            </label>
+            <label for="andar"
+              >Andar
+              <input type="number" id="andar" name="andar" />
+            </label>
+            <label for="capacidade-maxima"
+              >Capacidade máxima de pacientes
+              <input
+                type="number"
+                id="capacidade-maxima"
+                name="capacidadeMaxima"
+                min="1"
+              />
+            </label>
+            <label for="situacao"
+              >Situação atual
+              <select id="situacao" name="situacao">
+                <option>Disponível</option>
+                <option>Ocupado</option>
+              </select>
+            </label>
+          </div>
+          <div class="botoes">
+            <button type="button" id="botao-salvar">Salvar quarto</button>
+            <button type="button" class="secundario" id="botao-limpar">
+              Limpar
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

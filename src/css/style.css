@@ -241,4 +241,11 @@ button:disabled {
 .lista-informacoes li {
   margin-bottom: 4px;
 }
-
+.situacao-disponivel {
+  color: #1e6b3a;
+  font-weight: 600;
+}
+.situacao-ocupado {
+  color: #a32424;
+  font-weight: 600;
+}
