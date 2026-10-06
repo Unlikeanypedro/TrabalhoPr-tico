@@ -55,6 +55,113 @@
                 <option>Nome (Z–A)</option>
             </select>
         </label>
+
+        <section class="painel">
+            <div class="abas" role="tablist" aria-label="Visualização dos profissionais">
+                <button type="button" class="aba ativa" role="tab" id="aba-lista" aria-selected="true"
+                    aria-controls="painel-lista">Lista</button>
+                <button type="button" class="aba" role="tab" id="aba-detalhes" aria-selected="false"
+                    aria-controls="painel-detalhes" tabindex="-1">Detalhes</button>
+            </div>
+
+            <div id="painel-lista" role="tabpanel" aria-labelledby="aba-lista">
+                <p class="resumo">5 profissionais encontrados</p>
+                <div class="tabela-rolavel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Cargo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Pedro</td>
+                                <td>Médico</td>
+                            </tr>
+                            <tr>
+                                <td>Samuel</td>
+                                <td>Enfermeiro</td>
+                            </tr>
+                            <tr>
+                                <td>João</td>
+                                <td>Secretário</td>
+                            </tr>
+                            <tr>
+                                <td>Dimitri</td>
+                                <td>Técnico de enfermagem</td>
+                            </tr>
+                            <tr>
+                                <td>Crispim</td>
+                                <td>Administrador</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+<!-- colocar o hidden depois -->
+            <div id="painel-detalhes" role="tabpanel" aria-labelledby="aba-detalhes" >
+                <p class="resumo">Informações detalhadas dos profissionais</p>
+                <div class="tabela-rolavel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Cargo</th>
+                                <th scope="col">Setor</th>
+                                <th scope="col">Turno</th>
+                                <th scope="col">Carga horária</th>
+                                <th scope="col">Salário</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Pedro</td>
+                                <td>Médico</td>
+                                <td>Clínica geral</td>
+                                <td>Manhã</td>
+                                <td>40 h/semana</td>
+                                <td>R$ 12.500,00</td>
+                            </tr>
+                            <tr>
+                                <td>Samuel</td>
+                                <td>Enfermeiro</td>
+                                <td>UTI</td>
+                                <td>Noite</td>
+                                <td>36 h/semana</td>
+                                <td>R$ 5.800,00</td>
+                            </tr>
+                            <tr>
+                                <td>João</td>
+                                <td>Secretário</td>
+                                <td>Recepção</td>
+                                <td>Tarde</td>
+                                <td>40 h/semana</td>
+                                <td>R$ 2.600,00</td>
+                            </tr>
+                            <tr>
+                                <td>Dimitri</td>
+                                <td>Técnico de enfermagem</td>
+                                <td>Pronto-socorro</td>
+                                <td>Noite</td>
+                                <td>36 h/semana</td>
+                                <td>R$ 3.400,00</td>
+                            </tr>
+                            <tr>
+                                <td>Crispim</td>
+                                <td>Administrador</td>
+                                <td>Administração</td>
+                                <td>Manhã</td>
+                                <td>44 h/semana</td>
+                                <td>R$ 7.200,00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
     </main>
 
 </body>
