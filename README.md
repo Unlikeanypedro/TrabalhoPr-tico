@@ -2,8 +2,8 @@
 Trabalho prático de programação modular
 
 ## Membros do projeto:
-- Crispim
-- Dimitri
+- Crispim Bruno
+- Dimitri Gonzales
 - João Paulo
 - Pedro Oliveira
-- Samuel
+- Samuel Ferreira
