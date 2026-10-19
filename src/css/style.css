@@ -214,6 +214,7 @@ tbody tr:hover {
 }
 
 @media (max-width: 800px) {
+<<<<<<< HEAD
     #menu-principal {
         width: 100%;
     }
@@ -226,6 +227,20 @@ tbody tr:hover {
     #conteudo {
         padding: 12px;
     }
+=======
+  #menu-principal {
+    width: 100%;
+  }
+
+  .titulo-pagina {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #conteudo {
+    padding: 12px;
+  }
+>>>>>>> 454d1aebca85de24bd17523d9b12a27ae9dbb328
 }
 
 td button,
@@ -293,4 +308,56 @@ button:disabled {
 .situacao-ocupado {
     color: #a32424;
     font-weight: 600;
+}
+
+.somente-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+th:first-child,
+td:first-child {
+  width: 40%;
+}
+
+.abas {
+  display: flex;
+  gap: 4px;
+  margin: -16px -16px 16px;
+  padding: 8px 16px 0;
+  background: #e3e7ec;
+  border-bottom: 1px solid var(--borda);
+}
+
+button.aba {
+  padding: 8px 18px;
+  color: var(--texto);
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 2px 2px 0 0;
+}
+
+button.aba:hover {
+  background: #f4f6f8;
+}
+
+button.aba.ativa {
+  position: relative;
+  top: 1px;
+  color: var(--azul-escuro);
+  font-weight: 600;
+  background: #fff;
+  border-color: var(--borda);
+}
+
+[hidden] {
+  display: none !important;
 }

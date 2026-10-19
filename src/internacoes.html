@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Internações</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="cabecalho">
+      <div class="cabecalho-interno">
+        <a class="marca" href="index.html">Sistema Hospitalar</a>
+        <nav id="menu-principal">
+          <a href="index.html">Painel</a>
+          <a href="pacientes.html">Pacientes</a>
+          <a href="profissionais.html">Profissionais</a>
+          <a href="consultas.html">Consultas</a>
+          <a href="internacoes.html" class="ativo">Internações</a>
+          <a href="quartos.html">Quartos</a>
+          <a href="historico.html">Histórico médico</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <p class="caminho">Início > Internações</p>
+      <div class="titulo-pagina">
+        <h1>Internações</h1>
+        <a class="botao" href="#nova-internacao">Nova internação</a>
+      </div>
+
+      <section class="painel">
+        <h2>Filtrar internações</h2>
+        <form id="formulario-filtro" class="filtros" action="#">
+          <label for="filtro-paciente"
+            >Paciente
+            <input
+              type="search"
+              id="filtro-paciente"
+              name="filtroPaciente"
+              placeholder="Nome ou parte do nome"
+            />
+          </label>
+          <label for="filtro-profissional"
+            >Profissional responsável
+            <select id="filtro-profissional" name="filtroProfissional">
+              <option>Todos</option>
+              <option>Dra. Paula Reis (Cardiologia)</option>
+              <option>Dr. Rafael Costa (Ortopedia)</option>
+            </select>
+          </label>
+          <label for="filtro-quarto"
+            >Quarto
+            <select id="filtro-quarto" name="filtroQuarto">
+              <option>Todos</option>
+              <option>101</option>
+              <option>102</option>
+              <option>204</option>
+              <option>205</option>
+              <option>305</option>
+            </select>
+          </label>
+          <label for="filtro-situacao"
+            >Situação
+            <select id="filtro-situacao" name="filtroSituacao">
+              <option>Todas</option>
+              <option>Ativa</option>
+              <option>Finalizada</option>
+            </select>
+          </label>
+          <label for="filtro-entrada"
+            >Entrada a partir de
+            <input type="date" id="filtro-entrada" name="filtroEntrada" />
+          </label>
+          <label for="filtro-ordem"
+            >Ordenar por
+            <select id="filtro-ordem" name="filtroOrdem">
+              <option>Entrada mais recente</option>
+              <option>Entrada mais antiga</option>
+              <option>Alta prevista mais próxima</option>
+              <option>Paciente (A–Z)</option>
+            </select>
+          </label>
+          <div class="botoes">
+            <button type="button" id="botao-filtrar">Filtrar</button>
+            <button type="button" class="secundario" id="botao-limpar-filtros">
+              Limpar filtros
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section>
+        <p class="resumo" id="resumo-resultados">
+          Exibindo 5 de 37 internações
+        </p>
+        <div class="tabela-rolavel">
+          <table id="tabela-internacoes">
+            <thead>
+              <tr>
+                <th>Paciente</th>
+                <th>Profissional</th>
+                <th>Quarto</th>
+                <th>Entrada</th>
+                <th>Alta prevista</th>
+                <th>Alta efetiva</th>
+                <th>Situação</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fernanda Oliveira Rocha</td>
+                <td>Dr. Rafael Costa (Ortopedia)</td>
+                <td>205</td>
+                <td>03/10/2026</td>
+                <td>07/10/2026</td>
+                <td>—</td>
+                <td>Ativa</td>
+                <td>
+                  <a class="botao secundario" href="historico.html"
+                    >Histórico</a
+                  >
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <a class="botao secundario" href="#registrar-alta"
+                    >Dar alta</a
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>João Pedro Martins</td>
+                <td>Dr. Rafael Costa (Ortopedia)</td>
+                <td>204</td>
+                <td>01/10/2026</td>
+                <td>06/10/2026</td>
+                <td>—</td>
+                <td>Ativa</td>
+                <td>
+                  <a class="botao secundario" href="historico.html"
+                    >Histórico</a
+                  >
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <a class="botao secundario" href="#registrar-alta"
+                    >Dar alta</a
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Marina Duarte Alves</td>
+                <td>Dra. Paula Reis (Cardiologia)</td>
+                <td>305</td>
+                <td>30/09/2026</td>
+                <td>05/10/2026</td>
+                <td>—</td>
+                <td>Ativa</td>
+                <td>
+                  <a class="botao secundario" href="historico.html"
+                    >Histórico</a
+                  >
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <a class="botao secundario" href="#registrar-alta"
+                    >Dar alta</a
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Carlos Henrique Lima</td>
+                <td>Dra. Paula Reis (Cardiologia)</td>
+                <td>102</td>
+                <td>28/09/2026</td>
+                <td>08/10/2026</td>
+                <td>—</td>
+                <td>Ativa</td>
+                <td>
+                  <a class="botao secundario" href="historico.html"
+                    >Histórico</a
+                  >
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                  <a class="botao secundario" href="#registrar-alta"
+                    >Dar alta</a
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Ana Beatriz Souza</td>
+                <td>Dra. Paula Reis (Cardiologia)</td>
+                <td>101</td>
+                <td>20/05/2026</td>
+                <td>24/05/2026</td>
+                <td>24/05/2026</td>
+                <td>Finalizada</td>
+                <td>
+                  <a class="botao secundario" href="historico.html"
+                    >Histórico</a
+                  >
+                  <button type="button" class="secundario botao-editar">
+                    Editar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <nav class="paginacao" id="paginacao">
+          <button type="button" class="secundario" id="botao-anterior" disabled>
+            Anterior
+          </button>
+          <button type="button" class="secundario" id="botao-proximo">
+            Próximo
+          </button>
+        </nav>
+      </section>
+
+      <section class="painel" id="nova-internacao">
+        <h2>Registrar internação</h2>
+        <form id="formulario-internacao" action="#">
+          <div class="grupo">
+            <h3>Paciente e profissional</h3>
+            <label for="paciente"
+              >Paciente
+              <select id="paciente" name="paciente">
+                <option value="">Selecione o paciente</option>
+                <option>Ana Beatriz Souza</option>
+                <option>Carlos Henrique Lima</option>
+                <option>Fernanda Oliveira Rocha</option>
+                <option>João Pedro Martins</option>
+                <option>Marina Duarte Alves</option>
+              </select>
+            </label>
+            <label for="profissional"
+              >Profissional responsável
+              <select id="profissional" name="profissional">
+                <option value="">Selecione o profissional</option>
+                <option>Dra. Paula Reis (Cardiologia)</option>
+                <option>Dr. Rafael Costa (Ortopedia)</option>
+              </select>
+            </label>
+          </div>
+          <div class="grupo">
+            <h3>Quarto</h3>
+            <label for="quarto" class="largura-total"
+              >Quarto disponível
+              <select id="quarto" name="quarto">
+                <option value="">Selecione o quarto</option>
+                <option>101 — 1º andar (ocupação 0/2)</option>
+                <option>205 — 2º andar (ocupação 1/3)</option>
+                <option>305 — 3º andar (ocupação 2/4)</option>
+              </select>
+            </label>
+          </div>
+          <div class="grupo">
+            <h3>Período</h3>
+            <label for="data-entrada"
+              >Data de entrada
+              <input type="date" id="data-entrada" name="dataEntrada" />
+            </label>
+            <label for="data-prevista-alta"
+              >Data prevista de alta
+              <input
+                type="date"
+                id="data-prevista-alta"
+                name="dataPrevistaAlta"
+              />
+            </label>
+          </div>
+          <div class="grupo">
+            <h3>Observações</h3>
+            <label for="observacoes" class="largura-total"
+              >Observações
+              <textarea id="observacoes" name="observacoes" rows="4"></textarea>
+            </label>
+          </div>
+          <div class="botoes">
+            <button type="button" id="botao-salvar">Salvar internação</button>
+            <button type="button" class="secundario" id="botao-limpar">
+              Limpar
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="painel" id="registrar-alta">
+        <h2>Registrar alta</h2>
+        <form id="formulario-alta" action="#">
+          <div class="grupo">
+            <h3>Internação</h3>
+            <label for="internacao-ativa" class="largura-total"
+              >Internação ativa
+              <select id="internacao-ativa" name="internacao">
+                <option value="">Selecione a internação</option>
+                <option>
+                  Fernanda Oliveira Rocha — Quarto 205 (entrada 03/10/2026)
+                </option>
+                <option>
+                  João Pedro Martins — Quarto 204 (entrada 01/10/2026)
+                </option>
+                <option>
+                  Marina Duarte Alves — Quarto 305 (entrada 30/09/2026)
+                </option>
+                <option>
+                  Carlos Henrique Lima — Quarto 102 (entrada 28/09/2026)
+                </option>
+              </select>
+            </label>
+            <label for="data-efetiva-alta"
+              >Data efetiva de alta
+              <input
+                type="date"
+                id="data-efetiva-alta"
+                name="dataEfetivaAlta"
+              />
+            </label>
+            <label for="observacoes-alta" class="largura-total"
+              >Observações da alta
+              <textarea
+                id="observacoes-alta"
+                name="observacoesAlta"
+                rows="3"
+              ></textarea>
+            </label>
+          </div>
+          <div class="botoes">
+            <button type="button" id="botao-confirmar-alta">
+              Confirmar alta
+            </button>
+            <button type="button" class="secundario" id="botao-cancelar-alta">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
