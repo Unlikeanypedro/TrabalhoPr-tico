@@ -3,7 +3,7 @@ Trabalho prático de programação modular
 
 ## Membros do projeto:
 - Crispim Bruno
-- Dimitri Gonzales
+- Dimitry Silva Gonzales Alves
 - João Paulo
 - Pedro Oliveira
 - Samuel Ferreira
