@@ -14,10 +14,10 @@ public class QuartoRepositoryEmMemoria implements QuartoRepository {
 
     public synchronized long proximoId() { return ++sequencia; }
     public synchronized List<Quarto> listar() {
-        return quartos.values().stream().map(Quarto::copia).toList();
+        return quartos.values().stream().map(quarto -> quarto.copia()).toList();
     }
     public synchronized Optional<Quarto> buscarPorId(long id) {
-        return Optional.ofNullable(quartos.get(id)).map(Quarto::copia);
+        return Optional.ofNullable(quartos.get(id)).map(quarto -> quarto.copia());
     }
     public synchronized void salvar(Quarto quarto) { quartos.put(quarto.getId(), quarto.copia()); }
     public synchronized void excluir(long id) { quartos.remove(id); }
