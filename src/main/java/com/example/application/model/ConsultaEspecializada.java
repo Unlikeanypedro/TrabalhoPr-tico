@@ -42,4 +42,12 @@ public final class ConsultaEspecializada extends Consulta {
     public TipoConsulta getTipo() {
         return TipoConsulta.ESPECIALIZADA;
     }
+
+    private ConsultaEspecializada(ConsultaEspecializada origem) {
+        super(origem);
+        this.especialidade = origem.especialidade;
+    }
+
+    @Override
+    public ConsultaEspecializada copia() { return new ConsultaEspecializada(this); }
 }

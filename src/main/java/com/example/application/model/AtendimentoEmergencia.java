@@ -49,4 +49,12 @@ public final class AtendimentoEmergencia extends Consulta {
     public TipoConsulta getTipo() {
         return TipoConsulta.EMERGENCIA;
     }
+
+    private AtendimentoEmergencia(AtendimentoEmergencia origem) {
+        super(origem);
+        this.prioridade = origem.prioridade;
+    }
+
+    @Override
+    public AtendimentoEmergencia copia() { return new AtendimentoEmergencia(this); }
 }

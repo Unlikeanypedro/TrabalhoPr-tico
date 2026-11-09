@@ -51,6 +51,18 @@ public abstract class Consulta {
         this.motivo = motivo.strip();
     }
 
+    protected Consulta(Consulta origem) {
+        this.id = origem.id;
+        this.dataHora = origem.dataHora;
+        this.pacienteId = origem.pacienteId;
+        this.medico = origem.medico;
+        this.motivo = origem.motivo;
+        this.observacoes = origem.observacoes;
+        this.situacao = origem.situacao;
+    }
+
+    public abstract Consulta copia();
+
     public final void alterarSituacao(SituacaoConsulta destino) {
         if (destino == null) throw new IllegalArgumentException(
             "Informe a situação da consulta."

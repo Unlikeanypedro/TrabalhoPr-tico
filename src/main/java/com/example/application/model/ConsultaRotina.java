@@ -32,4 +32,9 @@ public final class ConsultaRotina extends Consulta {
     public TipoConsulta getTipo() {
         return TipoConsulta.ROTINA;
     }
+
+    private ConsultaRotina(ConsultaRotina origem) { super(origem); }
+
+    @Override
+    public ConsultaRotina copia() { return new ConsultaRotina(this); }
 }
