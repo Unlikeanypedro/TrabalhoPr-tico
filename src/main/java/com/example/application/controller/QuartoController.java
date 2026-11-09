@@ -19,7 +19,7 @@ public class QuartoController {
     public List<QuartoResponse> listar(@RequestParam(required = false) Integer numero,
             @RequestParam(required = false) Integer andar,
             @RequestParam(required = false) SituacaoQuarto situacao) {
-        return service.listar(numero, andar, situacao).stream().map(QuartoResponse::de).toList();
+        return service.listar(numero, andar, situacao).stream().map(quarto -> QuartoResponse.de(quarto)).toList();
     }
 
     @GetMapping("/{id}")
@@ -28,14 +28,14 @@ public class QuartoController {
     @PostMapping
     public ResponseEntity<QuartoResponse> criar(@RequestBody QuartoRequest dados) {
         dados.validar();
-        var quarto = service.criar(dados.numero(), dados.andar(), dados.capacidadeMaxima());
+        var quarto = service.criar(dados.getNumero(), dados.getAndar(), dados.getCapacidadeMaxima());
         return ResponseEntity.created(URI.create("/quartos/" + quarto.getId())).body(QuartoResponse.de(quarto));
     }
 
     @PutMapping("/{id}")
     public QuartoResponse atualizar(@PathVariable long id, @RequestBody QuartoRequest dados) {
         dados.validar();
-        return QuartoResponse.de(service.atualizar(id, dados.numero(), dados.andar(), dados.capacidadeMaxima()));
+        return QuartoResponse.de(service.atualizar(id, dados.getNumero(), dados.getAndar(), dados.getCapacidadeMaxima()));
     }
 
     @DeleteMapping("/{id}")

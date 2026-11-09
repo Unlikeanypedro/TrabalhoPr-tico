@@ -92,4 +92,31 @@ class QuartoServiceTest {
             assertEquals(1, service.buscar(id).ocupacaoAtual());
         }
     }
+    @Test void limitesValemMesmoSemPassarPelosControllers() {
+        int[][] invalidos = {
+            {0, 0, 1}, {10000, 0, 1}, {101, -3, 1},
+            {101, 31, 1}, {101, 0, 0}, {101, 0, 21}
+        };
+        for (int[] dados : invalidos) {
+            assertThrows(DadosQuartoInvalidosException.class,
+                () -> service.criar(dados[0], dados[1], dados[2]));
+        }
+        assertTrue(service.listar(null, null, null).isEmpty());
+        var minimo = service.criar(1, -2, 1);
+        var maximo = service.criar(9999, 30, 20);
+        assertEquals(-2, minimo.getAndar());
+        assertEquals(20, maximo.getCapacidadeMaxima());
+        assertThrows(DadosQuartoInvalidosException.class,
+            () -> service.atualizar(maximo.getId(), 9998, 31, 20));
+        assertEquals(9999, service.buscar(maximo.getId()).getNumero());
+        assertEquals(30, service.buscar(maximo.getId()).getAndar());
+    }
+
+    @Test void identificadoresInvalidosNaoAlteramOcupacao() {
+        long id = service.criar(101, 1, 2).getId();
+        assertThrows(DadosQuartoInvalidosException.class, () -> service.registrarEntrada(id, 0));
+        assertThrows(DadosQuartoInvalidosException.class, () -> service.registrarEntrada(id, -1));
+        assertThrows(DadosQuartoInvalidosException.class, () -> service.registrarAlta(id, -1));
+        assertEquals(0, service.buscar(id).ocupacaoAtual());
+    }
 }

@@ -3,6 +3,7 @@ package com.example.application.model;
 import java.util.HashSet;
 import java.util.Set;
 import com.example.application.exception.ConflitoException;
+import com.example.application.utils.QuartoValidacao;
 
 public class Quarto {
     private final long id;
@@ -12,7 +13,7 @@ public class Quarto {
     private final Set<Long> internacoesAtivas = new HashSet<>();
 
     public Quarto(long id, int numero, int andar, int capacidadeMaxima) {
-        if (id <= 0) throw new IllegalArgumentException("ID deve ser positivo.");
+        QuartoValidacao.validarIdentificador(id, "ID");
         this.id = id;
         atualizar(numero, andar, capacidadeMaxima);
     }
@@ -28,8 +29,7 @@ public class Quarto {
     public Quarto copia() { return new Quarto(this); }
 
     public void atualizar(int numero, int andar, int capacidadeMaxima) {
-        if (numero <= 0) throw new IllegalArgumentException("Número deve ser positivo.");
-        if (capacidadeMaxima <= 0) throw new IllegalArgumentException("Capacidade deve ser positiva.");
+        QuartoValidacao.validarDados(numero, andar, capacidadeMaxima);
         if (capacidadeMaxima < ocupacaoAtual())
             throw new ConflitoException("Capacidade não pode ser menor que a ocupação atual.");
         this.numero = numero;
@@ -52,7 +52,7 @@ public class Quarto {
     }
 
     private void validarInternacao(long id) {
-        if (id <= 0) throw new IllegalArgumentException("ID da internação deve ser positivo.");
+        QuartoValidacao.validarIdentificador(id, "ID da internação");
     }
 
     public long getId() { return id; }

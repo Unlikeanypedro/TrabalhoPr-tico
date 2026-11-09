@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Quartos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body>
+    <header class="cabecalho">
+      <div class="cabecalho-interno">
+        <a class="marca" th:href="@{/index.html}">Sistema Hospitalar</a>
+        <nav id="menu-principal">
+          <a th:href="@{/index.html}">Painel</a>
+          <a th:href="@{/pacientes.html}">Pacientes</a>
+          <a th:href="@{/profissionais.html}">Profissionais</a>
+          <a th:href="@{/consultas.html}">Consultas</a>
+          <a th:href="@{/internacoes.html}">Internações</a>
+          <a th:href="@{/quartos.html}" class="ativo">Quartos</a>
+          <a th:href="@{/historico.html}">Histórico médico</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <p class="caminho">Início &gt; Quartos</p>
+      <div class="titulo-pagina">
+        <h1>Quartos</h1>
+        <a class="botao" th:href="@{/quartos.html} + '#novo-quarto'">Novo quarto</a>
+      </div>
+      <p id="mensagem" role="status" th:if="${mensagem}" th:text="${mensagem}"></p>
+      <p id="erro" role="alert" th:if="${erro}" th:text="${erro}"></p>
+
+      <section class="painel">
+        <h2>Filtrar quartos</h2>
+        <form id="formulario-filtro" class="filtros" th:action="@{/quartos.html}" method="get">
+          <label for="filtro-numero">Número
+            <input type="number" step="1" th:min="${limites.numeroMinimo}" th:max="${limites.numeroMaximo}" id="filtro-numero" name="numero" th:value="${filtroNumero}" />
+          </label>
+          <label for="filtro-andar">Andar
+            <select id="filtro-andar" name="andar">
+              <option value="">Todos</option>
+              <option th:each="a : ${andares}" th:value="${a}" th:selected="${a == filtroAndar}"
+                th:text="${a == 0 ? 'Térreo' : a + 'º andar'}"></option>
+            </select>
+          </label>
+          <label for="filtro-situacao">Situação
+            <select id="filtro-situacao" name="situacao">
+              <option value="">Todas</option>
+              <option th:each="s : ${situacoes}" th:value="${s.name()}"
+                      th:selected="${s == filtroSituacao}" th:text="${s.descricao}"></option>
+            </select>
+          </label>
+          <label for="filtro-ordem">Ordenar por
+            <select id="filtro-ordem" name="ordem">
+              <option value="numero-asc" th:selected="${ordem == 'numero-asc'}">Número (crescente)</option>
+              <option value="numero-desc" th:selected="${ordem == 'numero-desc'}">Número (decrescente)</option>
+              <option value="andar" th:selected="${ordem == 'andar'}">Andar</option>
+            </select>
+          </label>
+          <div class="botoes">
+            <button type="submit" id="botao-filtrar">Filtrar</button>
+            <a class="botao secundario" id="botao-limpar-filtros" th:href="@{/quartos.html}">Limpar filtros</a>
+          </div>
+        </form>
+      </section>
+
+      <section>
+        <p class="resumo" id="resumo-resultados"
+          th:text="${total == 0 ? 'Nenhum quarto encontrado.' : 'Exibindo ' + inicio + ' a ' + fim + ' de ' + total + ' quartos'}"></p>
+        <div class="tabela-rolavel">
+          <table id="tabela-quartos">
+            <thead>
+              <tr>
+                <th>Número</th><th>Andar</th><th>Capacidade máxima</th>
+                <th>Ocupação</th><th>Situação</th><th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="quarto : ${quartos}">
+                <td th:text="${quarto.numero}"></td>
+                <td th:text="${quarto.andar}"></td>
+                <td th:text="${quarto.capacidadeMaxima}"></td>
+                <td th:text="${quarto.ocupacaoAtual + '/' + quarto.capacidadeMaxima}"></td>
+                <td th:class="${quarto.situacao == situacaoDisponivel ? 'situacao-disponivel' : 'situacao-ocupado'}"
+                    th:text="${quarto.situacao.descricao}"></td>
+                <td>
+                  <div class="botoes">
+                    <a class="botao secundario botao-editar" th:href="@{/quartos.html/editar/{id}(id=${quarto.id})}">Editar</a>
+                    <form th:action="@{/quartos.html/{id}/excluir(id=${quarto.id})}" method="post"
+                          onsubmit="return confirm('Excluir este quarto?')">
+                      <button type="submit" class="secundario botao-excluir">Excluir</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <nav class="paginacao" id="paginacao" aria-label="Paginação dos quartos">
+          <a class="botao secundario" id="botao-anterior" th:if="${pagina > 0}"
+             th:href="@{/quartos.html(numero=${filtroNumero},andar=${filtroAndar},situacao=${filtroSituacao},ordem=${ordem},pagina=${pagina - 1})}">Anterior</a>
+          <button type="button" class="secundario" th:if="${pagina == 0}" disabled>Anterior</button>
+          <a class="botao secundario" id="botao-proximo" th:if="${pagina < ultimaPagina}"
+             th:href="@{/quartos.html(numero=${filtroNumero},andar=${filtroAndar},situacao=${filtroSituacao},ordem=${ordem},pagina=${pagina + 1})}">Próximo</a>
+          <button type="button" class="secundario" th:if="${pagina == ultimaPagina}" disabled>Próximo</button>
+        </nav>
+      </section>
+
+      <section class="painel" id="novo-quarto">
+        <h2 id="titulo-formulario" th:text="${formulario.id == null ? 'Cadastrar quarto' : 'Editar quarto ' + formulario.numero}"></h2>
+        <form id="formulario-quarto" th:action="@{/quartos.html}" th:object="${formulario}" method="post">
+          <input type="hidden" th:field="*{id}" />
+          <div class="grupo">
+            <h3>Dados do quarto</h3>
+            <label for="numero">Número de identificação
+              <input type="number" th:field="*{numero}" step="1" th:min="${limites.numeroMinimo}" th:max="${limites.numeroMaximo}" required />
+            </label>
+            <label for="andar">Andar
+              <input type="number" th:field="*{andar}" step="1" th:min="${limites.andarMinimo}" th:max="${limites.andarMaximo}" required />
+            </label>
+            <label for="capacidade-maxima">Capacidade máxima de pacientes
+              <input type="number" id="capacidade-maxima" th:field="*{capacidadeMaxima}" step="1" th:min="${limites.capacidadeMinima}" th:max="${limites.capacidadeMaxima}" required />
+            </label>
+            <p>A situação e a ocupação são calculadas a partir das internações ativas.</p>
+            <p class="largura-total" th:text="${'Limites: número de ' + limites.numeroMinimo + ' a ' + limites.numeroMaximo
+                + '; andar de ' + limites.andarMinimo + ' a ' + limites.andarMaximo
+                + '; capacidade de ' + limites.capacidadeMinima + ' a ' + limites.capacidadeMaxima + ' pessoas.'}"></p>
+          </div>
+          <div class="botoes">
+            <button type="submit" id="botao-salvar" th:text="${formulario.id == null ? 'Salvar quarto' : 'Salvar alterações'}"></button>
+            <a class="botao secundario" id="botao-limpar" th:href="@{/quartos.html}">Cancelar</a>
+          </div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

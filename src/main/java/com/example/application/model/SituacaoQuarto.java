@@ -1,3 +1,12 @@
 package com.example.application.model;
 
-public enum SituacaoQuarto { DISPONIVEL, OCUPADO }
+public enum SituacaoQuarto {
+    DISPONIVEL("Disponível"),
+    OCUPADO("Ocupado");
+
+    private final String descricao;
+
+    SituacaoQuarto(String descricao) { this.descricao = descricao; }
+
+    public String getDescricao() { return descricao; }
+}

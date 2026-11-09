@@ -6,6 +6,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import com.example.application.exception.ConflitoException;
+import com.example.application.exception.DadosQuartoInvalidosException;
 import com.example.application.exception.NaoEncontradoException;
 
 @RestControllerAdvice(assignableTypes = QuartoController.class)
@@ -17,6 +18,10 @@ public class QuartoExceptionHandler {
     @ExceptionHandler(ConflitoException.class)
     public ResponseEntity<Map<String, String>> conflito(ConflitoException e) {
         return erro(409, e.getMessage());
+    }
+    @ExceptionHandler(DadosQuartoInvalidosException.class)
+    public ResponseEntity<Map<String, String>> dadosInvalidos(DadosQuartoInvalidosException e) {
+        return erro(400, e.getMessage());
     }
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> invalido(IllegalArgumentException e) {
