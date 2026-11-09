@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Internações</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body>
+    <header class="cabecalho">
+      <div class="cabecalho-interno">
+        <a class="marca" th:href="@{/index.html}">Sistema Hospitalar</a>
+        <nav id="menu-principal">
+          <a th:href="@{/index.html}">Painel</a>
+          <a th:href="@{/pacientes.html}">Pacientes</a>
+          <a th:href="@{/profissionais.html}">Profissionais</a>
+          <a th:href="@{/consultas.html}">Consultas</a>
+          <a th:href="@{/internacoes.html}" class="ativo">Internações</a>
+          <a th:href="@{/quartos.html}">Quartos</a>
+          <a th:href="@{/historico.html}">Histórico médico</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <p class="caminho">Início &gt; Internações</p>
+      <div class="titulo-pagina">
+        <h1>Internações</h1>
+        <a class="botao" th:href="@{/internacoes.html} + '#nova-internacao'">Nova internação</a>
+      </div>
+      <p id="mensagem" role="status" th:if="${mensagem}" th:text="${mensagem}"></p>
+      <p id="erro" role="alert" th:if="${erro}" th:text="${erro}"></p>
+
+      <section class="painel">
+        <h2>Filtrar internações</h2>
+        <form id="formulario-filtro" class="filtros" th:action="@{/internacoes.html}" method="get">
+          <label for="filtro-paciente">ID do paciente
+            <input type="number" min="1" step="1" id="filtro-paciente" name="pacienteId" th:value="${filtroPaciente}" />
+          </label>
+          <label for="filtro-profissional">ID do profissional responsável
+            <input type="number" min="1" step="1" id="filtro-profissional" name="profissionalId" th:value="${filtroProfissional}" />
+          </label>
+          <label for="filtro-quarto">Quarto
+            <select id="filtro-quarto" name="quartoId">
+              <option value="">Todos</option>
+              <option th:each="q : ${quartos}" th:value="${q.id}" th:selected="${q.id == filtroQuarto}"
+                      th:text="${q.numero}"></option>
+            </select>
+          </label>
+          <label for="filtro-situacao">Situação
+            <select id="filtro-situacao" name="situacao">
+              <option value="">Todas</option>
+              <option th:each="s : ${situacoes}" th:value="${s.name()}"
+                      th:selected="${s == filtroSituacao}" th:text="${s.descricao}"></option>
+            </select>
+          </label>
+          <label for="filtro-entrada">Entrada a partir de
+            <input type="date" id="filtro-entrada" name="entradaDesde" th:value="${filtroEntrada}" />
+          </label>
+          <label for="filtro-ordem">Ordenar por
+            <select id="filtro-ordem" name="ordem">
+              <option value="entrada-desc" th:selected="${ordem == 'entrada-desc'}">Entrada mais recente</option>
+              <option value="entrada-asc" th:selected="${ordem == 'entrada-asc'}">Entrada mais antiga</option>
+              <option value="alta-prevista" th:selected="${ordem == 'alta-prevista'}">Alta prevista mais próxima</option>
+              <option value="paciente" th:selected="${ordem == 'paciente'}">Paciente (ID)</option>
+            </select>
+          </label>
+          <div class="botoes">
+            <button type="submit" id="botao-filtrar">Filtrar</button>
+            <a class="botao secundario" id="botao-limpar-filtros" th:href="@{/internacoes.html}">Limpar filtros</a>
+          </div>
+        </form>
+      </section>
+
+      <section>
+        <p class="resumo" id="resumo-resultados"
+          th:text="${total == 0 ? 'Nenhuma internação encontrada.' : 'Exibindo ' + inicio + ' a ' + fim + ' de ' + total + ' internações'}"></p>
+        <div class="tabela-rolavel">
+          <table id="tabela-internacoes">
+            <thead>
+              <tr>
+                <th>Paciente (ID)</th><th>Profissional (ID)</th><th>Quarto</th><th>Entrada</th>
+                <th>Alta prevista</th><th>Alta efetiva</th><th>Situação</th><th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="i : ${internacoes}">
+                <td th:text="${i.pacienteId}"></td>
+                <td th:text="${i.profissionalId}"></td>
+                <td th:text="${numerosDosQuartos[i.quartoId] != null ? numerosDosQuartos[i.quartoId] : 'Removido'}"></td>
+                <td th:text="${#temporals.format(i.dataEntrada, 'dd/MM/yyyy')}"></td>
+                <td th:text="${#temporals.format(i.dataPrevistaAlta, 'dd/MM/yyyy')}"></td>
+                <td th:text="${i.dataEfetivaAlta != null ? #temporals.format(i.dataEfetivaAlta, 'dd/MM/yyyy') : '-'}"></td>
+                <td th:text="${i.situacao.descricao}"></td>
+                <td>
+                  <div class="botoes">
+                    <a class="botao secundario" th:href="@{/historico.html}">Histórico</a>
+                    <a class="botao secundario botao-editar" th:if="${i.situacao == situacaoAtiva}"
+                       th:href="@{/internacoes.html/editar/{id}(id=${i.id})} + '#nova-internacao'">Editar</a>
+                    <a class="botao secundario botao-alta" th:if="${i.situacao == situacaoAtiva}"
+                       th:href="@{/internacoes.html/alta/{id}(id=${i.id})} + '#registrar-alta'">Dar alta</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <nav class="paginacao" id="paginacao" aria-label="Paginação das internações">
+          <a class="botao secundario" id="botao-anterior" th:if="${pagina > 0}"
+             th:href="@{/internacoes.html(pacienteId=${filtroPaciente},profissionalId=${filtroProfissional},quartoId=${filtroQuarto},situacao=${filtroSituacao},entradaDesde=${filtroEntrada},ordem=${ordem},pagina=${pagina - 1})}">Anterior</a>
+          <button type="button" class="secundario" th:if="${pagina == 0}" disabled>Anterior</button>
+          <a class="botao secundario" id="botao-proximo" th:if="${pagina < ultimaPagina}"
+             th:href="@{/internacoes.html(pacienteId=${filtroPaciente},profissionalId=${filtroProfissional},quartoId=${filtroQuarto},situacao=${filtroSituacao},entradaDesde=${filtroEntrada},ordem=${ordem},pagina=${pagina + 1})}">Próximo</a>
+          <button type="button" class="secundario" th:if="${pagina == ultimaPagina}" disabled>Próximo</button>
+        </nav>
+      </section>
+
+      <section class="painel" id="nova-internacao">
+        <h2 id="titulo-formulario" th:text="${formulario.id == null ? 'Registrar internação' : 'Editar internação ' + formulario.id}"></h2>
+        <form id="formulario-internacao" th:action="@{/internacoes.html}" th:object="${formulario}" method="post">
+          <input type="hidden" th:field="*{id}" />
+          <div class="grupo">
+            <h3>Paciente e profissional</h3>
+            <label for="pacienteId">ID do paciente
+              <input type="number" th:field="*{pacienteId}" min="1" step="1" required th:readonly="${formulario.id != null}" />
+            </label>
+            <label for="profissionalId">ID do profissional responsável
+              <input type="number" th:field="*{profissionalId}" min="1" step="1" required />
+            </label>
+            <p class="largura-total">Enquanto os cadastros de pacientes e profissionais não estão prontos, informe os IDs.</p>
+          </div>
+          <div class="grupo">
+            <h3>Quarto</h3>
+            <label for="quartoId" class="largura-total">Quarto
+              <select th:field="*{quartoId}" required>
+                <option value="">Selecione o quarto</option>
+                <option th:each="q : ${quartos}" th:value="${q.id}"
+                        th:disabled="${q.ocupacaoAtual >= q.capacidadeMaxima and q.id != formulario.quartoId}"
+                        th:text="${q.numero + ' (' + q.andar + 'º andar, ocupação ' + q.ocupacaoAtual + '/' + q.capacidadeMaxima + ')'}"></option>
+              </select>
+            </label>
+            <p class="largura-total" th:if="${#lists.isEmpty(quartos)}">Nenhum quarto cadastrado. Cadastre em <a th:href="@{/quartos.html}">Quartos</a>.</p>
+          </div>
+          <div class="grupo">
+            <h3>Período</h3>
+            <label for="dataEntrada">Data de entrada
+              <input type="date" th:field="*{dataEntrada}" th:max="${hoje}" required th:readonly="${formulario.id != null}" />
+            </label>
+            <label for="dataPrevistaAlta">Data prevista de alta
+              <input type="date" th:field="*{dataPrevistaAlta}" required />
+            </label>
+          </div>
+          <div class="grupo">
+            <h3>Observações</h3>
+            <label for="observacoes" class="largura-total">Observações
+              <textarea th:field="*{observacoes}" rows="4" th:maxlength="${maximoObservacoes}"></textarea>
+            </label>
+          </div>
+          <div class="botoes">
+            <button type="submit" id="botao-salvar" th:text="${formulario.id == null ? 'Salvar internação' : 'Salvar alterações'}"></button>
+            <a class="botao secundario" id="botao-limpar" th:href="@{/internacoes.html}">Cancelar</a>
+          </div>
+        </form>
+      </section>
+
+      <section class="painel" id="registrar-alta">
+        <h2>Registrar alta</h2>
+        <form id="formulario-alta" th:action="@{/internacoes.html/alta}" th:object="${altaForm}" method="post">
+          <div class="grupo">
+            <h3>Internação</h3>
+            <label for="internacaoId" class="largura-total">Internação ativa
+              <select th:field="*{internacaoId}" required>
+                <option value="">Selecione a internação</option>
+                <option th:each="a : ${ativas}" th:value="${a.id}"
+                        th:text="${'Internação ' + a.id + ': paciente ' + a.pacienteId + ', quarto '
+                          + (numerosDosQuartos[a.quartoId] != null ? numerosDosQuartos[a.quartoId] : a.quartoId)
+                          + ' (entrada ' + #temporals.format(a.dataEntrada, 'dd/MM/yyyy') + ')'}"></option>
+              </select>
+            </label>
+            <label for="dataEfetivaAlta">Data efetiva de alta
+              <input type="date" th:field="*{dataEfetivaAlta}" th:max="${hoje}" required />
+            </label>
+            <label for="observacoes-alta" class="largura-total">Observações da alta
+              <textarea id="observacoes-alta" th:field="*{observacoes}" rows="3" th:maxlength="${maximoObservacoes}"></textarea>
+            </label>
+          </div>
+          <div class="botoes">
+            <button type="submit" id="botao-confirmar-alta">Confirmar alta</button>
+            <a class="botao secundario" id="botao-cancelar-alta" th:href="@{/internacoes.html}">Cancelar</a>
+          </div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
