@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -191,5 +193,55 @@ class ConsultaViewTest {
             assertEquals(400, enviar("GET", "/consultas.html?" + parametro, null).statusCode());
         assertEquals(200, enviar("GET", "/index.html", null).statusCode());
         assertEquals(200, enviar("GET", "/css/style.css", null).statusCode());
+    }
+
+    @ParameterizedTest
+    @EnumSource(TipoConsulta.class)
+    void interfaceEApiCompartilhamCadastroESituacaoDasTresModalidades(TipoConsulta tipo) throws Exception {
+        String dados = switch (tipo) {
+            case ROTINA -> DADOS;
+            case ESPECIALIZADA -> DADOS.replace("ROTINA", "ESPECIALIZADA").replace("8001", "8002")
+                + "&especialidade=Cardiologia";
+            case EMERGENCIA -> DADOS.replace("ROTINA", "EMERGENCIA") + "&prioridade=CRITICA";
+        };
+        assertEquals(302, enviar("POST", "/consultas.html", dados).statusCode());
+        long id = service.listar(null, null, tipo, null).getFirst().getId();
+        var consultaApi = enviar("GET", "/consultas/" + id, null);
+        assertEquals(200, consultaApi.statusCode());
+        assertTrue(consultaApi.body().contains("\"tipo\":\"" + tipo.name() + "\""));
+        assertTrue(consultaApi.body().contains("\"situacao\":\"AGENDADA\""));
+        var iniciada = cliente.send(HttpRequest.newBuilder(URI.create("http://localhost:" + porta
+                + "/consultas/" + id + "/situacao"))
+            .header("Content-Type", "application/json")
+            .method("PATCH", HttpRequest.BodyPublishers.ofString("{\"situacao\":\"EM_ATENDIMENTO\"}"))
+            .build(), HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, iniciada.statusCode());
+        var atendimento = enviar("GET", "/consultas.html/atendimento/" + id, null);
+        assertEquals(200, atendimento.statusCode());
+        assertTrue(atendimento.body().contains("Em atendimento"));
+        assertTrue(atendimento.body().contains("name=\"observacoes\""));
+        if (tipo == TipoConsulta.EMERGENCIA) assertTrue(atendimento.body().contains("Crítica"));
+        if (tipo == TipoConsulta.ESPECIALIZADA) assertTrue(atendimento.body().contains("Cardiologia"));
+        assertEquals(302, enviar("POST", "/consultas.html/" + id + "/situacao", "situacao=CONCLUIDA").statusCode());
+        assertTrue(enviar("GET", "/consultas/" + id, null).body().contains("\"situacao\":\"CONCLUIDA\""));
+        assertEquals(302, enviar("POST", "/consultas.html/" + id + "/excluir", "").statusCode());
+        assertEquals(200, enviar("GET", "/consultas/" + id, null).statusCode());
+    }
+
+    @Test void ausenciaRegistradaNaInterfaceNaoPodeSerReabertaPelaApi() throws Exception {
+        long id = service.agendarRotina(HORARIO, 8010, 8001, "Avaliação").getId();
+        assertEquals(302, enviar("POST", "/consultas.html/" + id + "/situacao", "situacao=NAO_COMPARECEU").statusCode());
+        var atendimento = enviar("GET", "/consultas.html/atendimento/" + id, null);
+        assertEquals(200, atendimento.statusCode());
+        assertTrue(atendimento.body().contains("Não compareceu"));
+        assertFalse(atendimento.body().contains("name=\"situacao\""));
+        assertFalse(atendimento.body().contains("name=\"observacoes\""));
+        var resposta = cliente.send(HttpRequest.newBuilder(URI.create("http://localhost:" + porta
+                + "/consultas/" + id + "/situacao"))
+            .header("Content-Type", "application/json")
+            .method("PATCH", HttpRequest.BodyPublishers.ofString("{\"situacao\":\"AGENDADA\"}"))
+            .build(), HttpResponse.BodyHandlers.ofString());
+        assertEquals(409, resposta.statusCode());
+        assertEquals(SituacaoConsulta.NAO_COMPARECEU, service.buscar(id).getSituacao());
     }
 }
