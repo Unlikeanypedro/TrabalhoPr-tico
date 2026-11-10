@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Consultas</title>
+        <link rel="stylesheet" th:href="@{/css/style.css}" />
+    </head>
+    <body>
+        <header class="cabecalho">
+            <div class="cabecalho-interno">
+                <a class="marca" th:href="@{/index.html}">Sistema Hospitalar</a>
+
+                <nav id="menu-principal">
+                    <a th:href="@{/index.html}">Painel</a>
+                    <a th:href="@{/pacientes.html}">Pacientes</a>
+                    <a th:href="@{/profissionais.html}">Profissionais</a>
+                    <a th:href="@{/consultas.html}" class="ativo">Consultas</a>
+                    <a th:href="@{/internacoes.html}">Internações</a>
+                    <a th:href="@{/quartos.html}">Quartos</a>
+                    <a th:href="@{/historico.html}">Histórico médico</a>
+                </nav>
+            </div>
+        </header>
+
+        <main id="conteudo">
+            <p class="caminho">Início &gt; Consultas</p>
+            <div class="titulo-pagina">
+                <h1>Consultas</h1>
+                <a class="botao" th:href="@{/consultas.html/nova} + '#nova-consulta'">Nova consulta</a>
+            </div>
+            <p id="mensagem" role="status" th:if="${mensagem}" th:text="${mensagem}"></p>
+            <p id="erro" role="alert" th:if="${erro}" th:text="${erro}"></p>
+            <section class="painel">
+                <h2>Filtrar consultas</h2>
+                <form id="formulario-filtro" class="filtros" th:action="@{/consultas.html}" method="get">
+                    <label for="filtro-data">Data
+                        <input type="date" id="filtro-data" name="data" th:value="${filtroData}" />
+                    </label>
+                    <label for="filtro-profissional">Profissional
+                        <select id="filtro-profissional" name="medicoId">
+                            <option value="">Todos</option>
+                            <option th:each="m : ${medicos}" th:value="${m.id()}" th:selected="${m.id() == filtroMedico}"
+                                th:text="${'Médico #' + m.id()}"></option>
+                        </select>
+                    </label>
+                    <label for="filtro-tipo">Tipo
+                        <select id="filtro-tipo" name="tipo">
+                            <option value="">Todos</option>
+                            <option th:each="t : ${tipos}" th:value="${t}" th:selected="${t == filtroTipo}" th:text="${t.descricao}"></option>
+                        </select>
+                    </label>
+                    <label for="filtro-ordem">Ordenar por
+                        <select id="filtro-ordem" name="ordem">
+                            <option value="data-asc" th:selected="${ordem == 'data-asc'}">Data (crescente)</option>
+                            <option value="data-desc" th:selected="${ordem == 'data-desc'}">Data (decrescente)</option>
+                            <option value="profissional-asc" th:selected="${ordem == 'profissional-asc'}">Profissional (crescente)</option>
+                            <option value="profissional-desc" th:selected="${ordem == 'profissional-desc'}">Profissional (decrescente)</option>
+                            <option value="tipo-asc" th:selected="${ordem == 'tipo-asc'}">Tipo (crescente)</option>
+                            <option value="tipo-desc" th:selected="${ordem == 'tipo-desc'}">Tipo (decrescente)</option>
+                        </select>
+                    </label>
+                    <input th:if="${filtroSituacao != null}" type="hidden" name="situacao" th:value="${filtroSituacao}" />
+                    <div class="botoes">
+                        <button type="submit" id="botao-filtrar">Filtrar</button>
+                        <a class="botao secundario" id="botao-limpar-filtros" th:href="@{/consultas.html}">Limpar filtros</a>
+                    </div>
+                </form>
+            </section>
+            <section>
+                <p class="resumo" id="resumo-resultados" th:text="${total == 0 ? 'Nenhuma consulta encontrada.' : 'Exibindo ' + inicio + ' a ' + fim + ' de ' + total + ' consultas'}"></p>
+                <div class="tabela-rolavel">
+                    <table id="tabela-consultas">
+                        <thead>
+                            <tr><th>Data</th><th>Profissional</th><th>Tipo</th><th>Situação</th><th>Ações</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="c : ${consultas}">
+                                <td th:text="${#temporals.format(c.dataHora, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td th:text="${'Médico #' + c.medico.id()}"></td>
+                                <td th:text="${c.tipo.descricao}"></td>
+                                <td><span th:class="${c.situacao.name() == 'CANCELADA' || c.situacao.name() == 'NAO_COMPARECEU' ? 'situacao-ocupado' : 'situacao-disponivel'}" th:text="${c.situacao.descricao}"></span></td>
+                                <td>
+                                    <div class="botoes">
+                                        <a th:if="${c.situacao.name() == 'AGENDADA' || c.situacao.name() == 'CONFIRMADA'}" class="botao secundario botao-editar" th:href="@{/consultas.html/editar/{id}(id=${c.id})} + '#nova-consulta'">Editar</a>
+                                        <form th:if="${c.situacao.name() != 'EM_ATENDIMENTO' && c.situacao.name() != 'CONCLUIDA'}" th:action="@{/consultas.html/{id}/excluir(id=${c.id})}" method="post" onsubmit="return confirm('Excluir esta consulta?')">
+                                            <button type="submit" class="secundario botao-excluir">Excluir</button>
+                                        </form>
+                                        <a class="botao secundario" th:href="@{/consultas.html/atendimento/{id}(id=${c.id})} + '#atendimento'">Atendimento</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <nav class="paginacao" id="paginacao" aria-label="Paginação das consultas">
+                    <a class="botao secundario" id="botao-anterior" th:if="${pagina > 0}" th:href="@{/consultas.html(data=${filtroData},medicoId=${filtroMedico},tipo=${filtroTipo},situacao=${filtroSituacao},ordem=${ordem},pagina=${pagina - 1})}">Anterior</a>
+                    <button type="button" class="secundario" id="botao-anterior" th:if="${pagina == 0}" disabled>Anterior</button>
+                    <a class="botao secundario" id="botao-proximo" th:if="${pagina < ultimaPagina}" th:href="@{/consultas.html(data=${filtroData},medicoId=${filtroMedico},tipo=${filtroTipo},situacao=${filtroSituacao},ordem=${ordem},pagina=${pagina + 1})}">Próximo</a>
+                    <button type="button" class="secundario" id="botao-proximo" th:if="${pagina == ultimaPagina}" disabled>Próximo</button>
+                </nav>
+            </section>
+            <section class="painel" id="nova-consulta" th:if="${formulario != null}">
+                <h2 th:text="${formulario.id == null ? 'Nova consulta' : 'Editar consulta #' + formulario.id}"></h2>
+                <form id="formulario-consulta" th:action="@{/consultas.html}" th:object="${formulario}" method="post">
+                    <input type="hidden" th:field="*{id}" />
+                    <input th:if="${formulario.id != null}" type="hidden" name="tipo" th:value="${formulario.tipo}" />
+                    <input th:if="${formulario.id != null}" type="hidden" name="prioridade" th:value="${formulario.prioridade}" />
+                    <div class="grupo">
+                        <h3>Dados da consulta</h3>
+                        <label for="tipo">Tipo
+                            <select th:field="*{tipo}" th:disabled="${formulario.id != null}" required>
+                                <option th:each="t : ${tipos}" th:value="${t}" th:text="${t.descricao}"></option>
+                            </select>
+                        </label>
+                        <label for="dataHora">Data e horário
+                            <input type="datetime-local" th:field="*{dataHora}" step="1" required />
+                        </label>
+                        <label for="pacienteId">ID do paciente
+                            <input type="number" th:field="*{pacienteId}" min="1" step="1" required />
+                        </label>
+                        <label for="medicoId">Profissional
+                            <select th:field="*{medicoId}" required>
+                                <option value="">Selecione</option>
+                                <option th:each="m : ${medicos}" th:value="${m.id()}" th:text="${'Médico #' + m.id() + (m.especialidade() == null ? '' : ' — ' + m.especialidade())}"></option>
+                            </select>
+                        </label>
+                        <label for="motivo">Motivo
+                            <input type="text" th:field="*{motivo}" required />
+                        </label>
+                        <label for="especialidade">Especialidade (consulta especializada)
+                            <input type="text" th:field="*{especialidade}" th:readonly="${formulario.id != null}" />
+                        </label>
+                        <label for="prioridade">Prioridade (emergência)
+                            <select th:field="*{prioridade}" th:disabled="${formulario.id != null}">
+                                <option value="">Selecione</option>
+                                <option th:each="p : ${prioridades}" th:value="${p}" th:text="${p.descricao}"></option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="botoes">
+                        <button type="submit" id="botao-salvar">Salvar consulta</button>
+                        <a class="botao secundario" th:href="@{/consultas.html}">Cancelar</a>
+                    </div>
+                </form>
+            </section>
+            <section class="painel" id="atendimento" th:if="${atendimento != null}">
+                <h2 th:text="${'Atendimento da consulta #' + atendimento.id}"></h2>
+                <div class="grupo">
+                    <p th:text="${'Paciente #' + atendimento.pacienteId}"></p>
+                    <p th:text="${'Médico #' + atendimento.medicoId}"></p>
+                    <p th:text="${#temporals.format(atendimento.dataHora, 'dd/MM/yyyy HH:mm')}"></p>
+                    <p th:text="${atendimento.tipo.descricao}"></p>
+                    <p th:text="${atendimento.situacao.descricao}"></p>
+                    <p th:text="${atendimento.motivo}"></p>
+                    <p th:if="${atendimento.especialidade != null}" th:text="${atendimento.especialidade}"></p>
+                    <p th:if="${atendimento.prioridade != null}" th:text="${atendimento.prioridade.descricao}"></p>
+                </div>
+                <form th:if="${!#lists.isEmpty(proximasSituacoes)}" th:action="@{/consultas.html/{id}/situacao(id=${atendimento.id})}" method="post">
+                    <div class="grupo">
+                        <label for="situacao">Alterar situação
+                            <select name="situacao" id="situacao" required>
+                                <option value="">Selecione</option>
+                                <option th:each="s : ${proximasSituacoes}" th:value="${s}" th:text="${s.descricao}"></option>
+                            </select>
+                        </label>
+                        <div class="botoes"><button type="submit">Atualizar situação</button></div>
+                    </div>
+                </form>
+                <form th:if="${permiteObservacoes}" th:action="@{/consultas.html/{id}/observacoes(id=${atendimento.id})}" method="post">
+                    <div class="grupo">
+                        <label for="observacoes">Observações
+                            <input type="text" id="observacoes" name="observacoes" th:value="${observacoes}" required />
+                        </label>
+                        <div class="botoes"><button type="submit">Salvar observações</button></div>
+                    </div>
+                </form>
+                <p th:unless="${permiteObservacoes}" th:text="${atendimento.observacoes}"></p>
+                <a class="botao secundario" th:href="@{/consultas.html}">Voltar</a>
+            </section>
+        </main>
+    </body>
+</html>
