@@ -56,5 +56,7 @@ public final class AtendimentoEmergencia extends Consulta {
     }
 
     @Override
-    public AtendimentoEmergencia copia() { return new AtendimentoEmergencia(this); }
+    public AtendimentoEmergencia copia() {
+        return new AtendimentoEmergencia(this);
+    }
 }

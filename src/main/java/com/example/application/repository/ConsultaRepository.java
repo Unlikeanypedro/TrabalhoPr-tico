@@ -1,8 +1,8 @@
 package com.example.application.repository;
 
+import com.example.application.model.Consulta;
 import java.util.List;
 import java.util.Optional;
-import com.example.application.model.Consulta;
 
 public interface ConsultaRepository {
     long proximoId();

@@ -49,5 +49,7 @@ public final class ConsultaEspecializada extends Consulta {
     }
 
     @Override
-    public ConsultaEspecializada copia() { return new ConsultaEspecializada(this); }
+    public ConsultaEspecializada copia() {
+        return new ConsultaEspecializada(this);
+    }
 }
