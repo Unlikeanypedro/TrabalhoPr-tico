@@ -57,7 +57,7 @@
             <resource>
                 <directory>src/front-end</directory>
                 <targetPath>static</targetPath>
-                <excludes><exclude>quartos.html</exclude><exclude>internacoes.html</exclude><exclude>js/quartos.js</exclude></excludes>
+                <excludes><exclude>quartos.html</exclude><exclude>internacoes.html</exclude><exclude>js/quartos.js</exclude><exclude>consultas.html</exclude></excludes>
             </resource>
         </resources>
         <plugins>
