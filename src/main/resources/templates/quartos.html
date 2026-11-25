@@ -30,6 +30,7 @@
       </div>
       <p id="mensagem" role="status" th:if="${mensagem}" th:text="${mensagem}"></p>
       <p id="erro" role="alert" th:if="${erro}" th:text="${erro}"></p>
+      <p id="resultado-rest" role="status" tabindex="-1" hidden th:data-voltar="@{/quartos.html}"></p>
 
       <section class="painel">
         <h2>Filtrar quartos</h2>
@@ -88,6 +89,8 @@
                   <div class="botoes">
                     <a class="botao secundario botao-editar" th:href="@{/quartos.html/editar/{id}(id=${quarto.id})}">Editar</a>
                     <form th:action="@{/quartos.html/{id}/excluir(id=${quarto.id})}" method="post"
+                          th:data-api="@{/quartos/{id}(id=${quarto.id})}" data-metodo="DELETE"
+                          data-sucesso="Quarto excluído."
                           onsubmit="return confirm('Excluir este quarto?')">
                       <button type="submit" class="secundario botao-excluir">Excluir</button>
                     </form>
@@ -109,7 +112,10 @@
 
       <section class="painel" id="novo-quarto">
         <h2 id="titulo-formulario" th:text="${formulario.id == null ? 'Cadastrar quarto' : 'Editar quarto ' + formulario.numero}"></h2>
-        <form id="formulario-quarto" th:action="@{/quartos.html}" th:object="${formulario}" method="post">
+        <form id="formulario-quarto" th:action="@{/quartos.html}" th:object="${formulario}" method="post"
+              th:data-api="${formulario.id == null} ? @{/quartos} : @{/quartos/{id}(id=${formulario.id})}"
+              th:data-metodo="${formulario.id == null ? 'POST' : 'PUT'}"
+              data-campos="numero andar capacidadeMaxima" data-sucesso="Quarto salvo.">
           <input type="hidden" th:field="*{id}" />
           <div class="grupo">
             <h3>Dados do quarto</h3>
@@ -134,5 +140,6 @@
         </form>
       </section>
     </main>
+    <script th:src="@{/js/quartos-internacoes.js}" defer></script>
   </body>
 </html>

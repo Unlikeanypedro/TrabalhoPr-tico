@@ -133,8 +133,8 @@ public class InternacaoViewController {
     }
 
     private String preencherPagina(Model model, InternacaoForm formulario, AltaForm altaForm, Filtros filtros) {
-        String ordenacao = switch (filtros.ordem()) {
-            case "entrada-asc", "alta-prevista", "paciente" -> filtros.ordem();
+        String ordenacao = switch (filtros.ordem) {
+            case "entrada-asc", "alta-prevista", "paciente" -> filtros.ordem;
             default -> "entrada-desc";
         };
         Comparator<Internacao> porEntrada = Comparator.comparing((Internacao i) -> i.getDataEntrada())
@@ -147,13 +147,13 @@ public class InternacaoViewController {
                 .thenComparing(porEntrada.reversed());
             default -> porEntrada.reversed();
         };
-        var filtradas = service.listar(filtros.pacienteId(), filtros.profissionalId(), filtros.quartoId(),
-                filtros.situacao()).stream()
-            .filter(i -> filtros.entradaDesde() == null || !i.getDataEntrada().isBefore(filtros.entradaDesde()))
+        var filtradas = service.listar(filtros.pacienteId, filtros.profissionalId, filtros.quartoId,
+                filtros.situacao).stream()
+            .filter(i -> filtros.entradaDesde == null || !i.getDataEntrada().isBefore(filtros.entradaDesde))
             .sorted(comparador).toList();
         int total = filtradas.size();
         int ultimaPagina = total == 0 ? 0 : (total - 1) / TAMANHO_PAGINA;
-        int atual = Math.max(0, Math.min(filtros.pagina(), ultimaPagina));
+        int atual = Math.max(0, Math.min(filtros.pagina, ultimaPagina));
         int inicio = atual * TAMANHO_PAGINA;
         int fim = Math.min(inicio + TAMANHO_PAGINA, total);
 
@@ -174,11 +174,11 @@ public class InternacaoViewController {
         model.addAttribute("maximoObservacoes", InternacaoConstantes.TAMANHO_MAXIMO_OBSERVACOES);
         model.addAttribute("situacoes", SituacaoInternacao.values());
         model.addAttribute("situacaoAtiva", SituacaoInternacao.ATIVA);
-        model.addAttribute("filtroPaciente", filtros.pacienteId());
-        model.addAttribute("filtroProfissional", filtros.profissionalId());
-        model.addAttribute("filtroQuarto", filtros.quartoId());
-        model.addAttribute("filtroSituacao", filtros.situacao());
-        model.addAttribute("filtroEntrada", filtros.entradaDesde());
+        model.addAttribute("filtroPaciente", filtros.pacienteId);
+        model.addAttribute("filtroProfissional", filtros.profissionalId);
+        model.addAttribute("filtroQuarto", filtros.quartoId);
+        model.addAttribute("filtroSituacao", filtros.situacao);
+        model.addAttribute("filtroEntrada", filtros.entradaDesde);
         model.addAttribute("ordem", ordenacao);
         model.addAttribute("pagina", atual);
         model.addAttribute("ultimaPagina", ultimaPagina);
@@ -188,8 +188,28 @@ public class InternacaoViewController {
         return "internacoes";
     }
 
-    private record Filtros(Long pacienteId, Long profissionalId, Long quartoId, SituacaoInternacao situacao,
-            LocalDate entradaDesde, String ordem, int pagina) {
-        static Filtros vazios() { return new Filtros(null, null, null, null, null, "entrada-desc", 0); }
+    private static final class Filtros {
+        private final Long pacienteId;
+        private final Long profissionalId;
+        private final Long quartoId;
+        private final SituacaoInternacao situacao;
+        private final LocalDate entradaDesde;
+        private final String ordem;
+        private final int pagina;
+
+        private Filtros(Long pacienteId, Long profissionalId, Long quartoId, SituacaoInternacao situacao,
+                LocalDate entradaDesde, String ordem, int pagina) {
+            this.pacienteId = pacienteId;
+            this.profissionalId = profissionalId;
+            this.quartoId = quartoId;
+            this.situacao = situacao;
+            this.entradaDesde = entradaDesde;
+            this.ordem = ordem;
+            this.pagina = pagina;
+        }
+
+        static Filtros vazios() {
+            return new Filtros(null, null, null, null, null, "entrada-desc", 0);
+        }
     }
 }

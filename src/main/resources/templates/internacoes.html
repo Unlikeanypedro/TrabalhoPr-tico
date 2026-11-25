@@ -30,6 +30,7 @@
       </div>
       <p id="mensagem" role="status" th:if="${mensagem}" th:text="${mensagem}"></p>
       <p id="erro" role="alert" th:if="${erro}" th:text="${erro}"></p>
+      <p id="resultado-rest" role="status" tabindex="-1" hidden th:data-voltar="@{/internacoes.html}"></p>
 
       <section class="painel">
         <h2>Filtrar internações</h2>
@@ -87,14 +88,22 @@
               <tr th:each="i : ${internacoes}">
                 <td th:text="${i.pacienteId}"></td>
                 <td th:text="${i.profissionalId}"></td>
-                <td th:text="${numerosDosQuartos[i.quartoId] != null ? numerosDosQuartos[i.quartoId] : 'Removido'}"></td>
+                <td th:text="${numerosDosQuartos[i.quartoId] != null ? numerosDosQuartos[i.quartoId] : i.numeroQuartoRegistrado}"></td>
                 <td th:text="${#temporals.format(i.dataEntrada, 'dd/MM/yyyy')}"></td>
                 <td th:text="${#temporals.format(i.dataPrevistaAlta, 'dd/MM/yyyy')}"></td>
                 <td th:text="${i.dataEfetivaAlta != null ? #temporals.format(i.dataEfetivaAlta, 'dd/MM/yyyy') : '-'}"></td>
                 <td th:text="${i.situacao.descricao}"></td>
                 <td>
                   <div class="botoes">
-                    <a class="botao secundario" th:href="@{/historico.html}">Histórico</a>
+                    <details th:if="${!#lists.isEmpty(i.historicoQuartos)}">
+                      <summary>Histórico de quartos</summary>
+                      <ul>
+                        <li th:each="estadia : ${i.historicoQuartos}"
+                            th:text="${'Quarto ' + estadia.numeroQuarto + ' de '
+                              + #temporals.format(estadia.dataEntrada, 'dd/MM/yyyy')
+                              + (estadia.dataSaida == null ? ' (atual)' : ' até ' + #temporals.format(estadia.dataSaida, 'dd/MM/yyyy'))}"></li>
+                      </ul>
+                    </details>
                     <a class="botao secundario botao-editar" th:if="${i.situacao == situacaoAtiva}"
                        th:href="@{/internacoes.html/editar/{id}(id=${i.id})} + '#nova-internacao'">Editar</a>
                     <a class="botao secundario botao-alta" th:if="${i.situacao == situacaoAtiva}"
@@ -117,7 +126,11 @@
 
       <section class="painel" id="nova-internacao">
         <h2 id="titulo-formulario" th:text="${formulario.id == null ? 'Registrar internação' : 'Editar internação ' + formulario.id}"></h2>
-        <form id="formulario-internacao" th:action="@{/internacoes.html}" th:object="${formulario}" method="post">
+        <form id="formulario-internacao" th:action="@{/internacoes.html}" th:object="${formulario}" method="post"
+              th:data-api="${formulario.id == null} ? @{/internacoes} : @{/internacoes/{id}(id=${formulario.id})}"
+              th:data-metodo="${formulario.id == null ? 'POST' : 'PUT'}"
+              th:data-campos="${formulario.id == null ? 'pacienteId profissionalId quartoId dataEntrada dataPrevistaAlta observacoes' : 'profissionalId quartoId dataPrevistaAlta observacoes'}"
+              th:data-sucesso="${formulario.id == null ? 'Internação registrada.' : 'Internação atualizada.'}">
           <input type="hidden" th:field="*{id}" />
           <div class="grupo">
             <h3>Paciente e profissional</h3>
@@ -127,7 +140,7 @@
             <label for="profissionalId">ID do profissional responsável
               <input type="number" th:field="*{profissionalId}" min="1" step="1" required />
             </label>
-            <p class="largura-total">Enquanto os cadastros de pacientes e profissionais não estão prontos, informe os IDs.</p>
+            <p class="largura-total">Informe os IDs de um paciente e de um profissional já cadastrados.</p>
           </div>
           <div class="grupo">
             <h3>Quarto</h3>
@@ -165,7 +178,9 @@
 
       <section class="painel" id="registrar-alta">
         <h2>Registrar alta</h2>
-        <form id="formulario-alta" th:action="@{/internacoes.html/alta}" th:object="${altaForm}" method="post">
+        <form id="formulario-alta" th:action="@{/internacoes.html/alta}" th:object="${altaForm}" method="post"
+              th:data-api="@{/internacoes}" data-metodo="PATCH"
+              data-campos="dataEfetivaAlta observacoes" data-sucesso="Alta registrada.">
           <div class="grupo">
             <h3>Internação</h3>
             <label for="internacaoId" class="largura-total">Internação ativa
@@ -191,5 +206,6 @@
         </form>
       </section>
     </main>
+    <script th:src="@{/js/quartos-internacoes.js}" defer></script>
   </body>
 </html>
