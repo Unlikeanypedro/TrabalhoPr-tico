@@ -7,6 +7,9 @@ import java.net.http.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import com.example.application.repository.PacienteRepository;
+import com.example.application.repository.ProfissionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -18,10 +21,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class InternacaoViewTest {
     @LocalServerPort int porta;
     @Autowired QuartoService quartos;
+    @Autowired PacienteRepository pacientes;
+    @Autowired ProfissionalRepository profissionais;
     @Autowired InternacaoService service;
     private final LocalDate hoje = LocalDate.now();
     private final HttpClient cliente = HttpClient.newBuilder()
         .cookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ALL)).build();
+
+    @BeforeEach void cadastrarReferencias() {
+        for (long id : new long[]{920001, 920002, 920003}) CadastrosInternacaoTeste.paciente(pacientes, id);
+        for (long id : new long[]{5, 6}) CadastrosInternacaoTeste.profissional(profissionais, id);
+    }
 
     private HttpResponse<String> enviar(String metodo, String caminho, String formulario) throws Exception {
         return cliente.send(HttpRequest.newBuilder(URI.create("http://localhost:" + porta + caminho))

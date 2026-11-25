@@ -8,6 +8,8 @@ import com.example.application.exception.*;
 import com.example.application.model.*;
 import com.example.application.repository.InternacaoRepositoryEmMemoria;
 import com.example.application.repository.QuartoRepositoryEmMemoria;
+import com.example.application.repository.PacienteRepositoryEmMemoria;
+import com.example.application.repository.ProfissionalRepositoryEmMemoria;
 import com.example.application.service.InternacaoService;
 import com.example.application.service.QuartoService;
 
@@ -18,7 +20,11 @@ class InternacaoServiceTest {
 
     @BeforeEach void preparar() {
         quartos = new QuartoService(new QuartoRepositoryEmMemoria());
-        service = new InternacaoService(new InternacaoRepositoryEmMemoria(), quartos);
+        var pacientes = new PacienteRepositoryEmMemoria();
+        var profissionais = new ProfissionalRepositoryEmMemoria();
+        for (long id : new long[]{1, 2, 3}) CadastrosInternacaoTeste.paciente(pacientes, id);
+        for (long id : new long[]{20, 21, 22, 30, 40}) CadastrosInternacaoTeste.profissional(profissionais, id);
+        service = new InternacaoService(new InternacaoRepositoryEmMemoria(), quartos, pacientes, profissionais);
     }
 
     private Internacao internar(long pacienteId, long quartoId) {
@@ -38,7 +44,7 @@ class InternacaoServiceTest {
         long quarto = quartos.criar(204, 2, 1).getId();
         internar(1, quarto);
         assertEquals(SituacaoQuarto.OCUPADO, quartos.buscar(quarto).getSituacao());
-        assertThrows(ConflitoException.class, () -> internar(2, quarto));
+        assertThrows(QuartoSemVagasException.class, () -> internar(2, quarto));
         assertEquals(1, service.listar(null, null, null, null).size());
         assertEquals(1, quartos.buscar(quarto).ocupacaoAtual());
     }
@@ -67,6 +73,10 @@ class InternacaoServiceTest {
             () -> service.registrar(1L, 20L, quarto, null, hoje, null));
         assertThrows(NaoEncontradoException.class,
             () -> service.registrar(1L, 20L, 999L, hoje, hoje, null));
+        assertThrows(NaoEncontradoException.class,
+            () -> service.registrar(999L, 20L, quarto, hoje, hoje, null));
+        assertThrows(NaoEncontradoException.class,
+            () -> service.registrar(1L, 999L, quarto, hoje, hoje, null));
         assertEquals(0, quartos.buscar(quarto).ocupacaoAtual());
         assertTrue(service.listar(null, null, null, null).isEmpty());
     }
@@ -114,6 +124,11 @@ class InternacaoServiceTest {
         long id = internar(1, origem).getId();
         var transferida = service.transferir(id, destino);
         assertEquals(destino, transferida.getQuartoId());
+        assertEquals(2, transferida.getHistoricoQuartos().size());
+        assertEquals(204, transferida.getHistoricoQuartos().get(0).getNumeroQuarto());
+        assertEquals(hoje, transferida.getHistoricoQuartos().get(0).getDataSaida());
+        assertNull(transferida.getHistoricoQuartos().get(1).getDataSaida());
+        assertThrows(IllegalArgumentException.class, () -> service.darAlta(id, hoje.minusDays(1), null));
         assertEquals(0, quartos.buscar(origem).ocupacaoAtual());
         assertEquals(1, quartos.buscar(destino).ocupacaoAtual());
         service.darAlta(id, hoje, null);
@@ -125,7 +140,7 @@ class InternacaoServiceTest {
         long lotado = quartos.criar(204, 2, 1).getId();
         internar(2, lotado);
         long id = internar(1, origem).getId();
-        assertThrows(ConflitoException.class, () -> service.transferir(id, lotado));
+        assertThrows(QuartoSemVagasException.class, () -> service.transferir(id, lotado));
         assertThrows(ConflitoException.class, () -> service.transferir(id, origem));
         assertThrows(NaoEncontradoException.class, () -> service.transferir(id, 999L));
         assertEquals(origem, service.buscar(id).getQuartoId());

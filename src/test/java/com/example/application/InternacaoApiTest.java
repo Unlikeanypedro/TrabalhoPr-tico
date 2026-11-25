@@ -4,6 +4,9 @@ import java.net.URI;
 import java.net.http.*;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import com.example.application.repository.PacienteRepository;
+import com.example.application.repository.ProfissionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -14,8 +17,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class InternacaoApiTest {
     @LocalServerPort int porta;
     @Autowired QuartoService quartos;
+    @Autowired PacienteRepository pacientes;
+    @Autowired ProfissionalRepository profissionais;
     private final HttpClient cliente = HttpClient.newHttpClient();
     private final LocalDate hoje = LocalDate.now();
+
+    @BeforeEach void cadastrarReferencias() {
+        for (long id : new long[]{910001, 910002, 910010}) CadastrosInternacaoTeste.paciente(pacientes, id);
+        for (long id : new long[]{7, 8}) CadastrosInternacaoTeste.profissional(profissionais, id);
+    }
 
     private HttpResponse<String> enviar(String metodo, String caminho, String json) throws Exception {
         return cliente.send(HttpRequest.newBuilder(URI.create("http://localhost:" + porta + caminho))
@@ -45,7 +55,8 @@ class InternacaoApiTest {
 
         var lotado = enviar("POST", "/internacoes", internacao(910002, origem, hoje, hoje.plusDays(1)));
         assertEquals(409, lotado.statusCode());
-        assertTrue(lotado.body().contains("mensagem"));
+        assertTrue(lotado.body().contains("Quarto sem vagas disponíveis."));
+        assertTrue(enviar("GET", "/quartos?numero=6001&situacao=DISPONIVEL", null).body().equals("[]"));
         assertEquals(409, enviar("POST", "/internacoes", internacao(910001, destino, hoje, hoje)).statusCode());
 
         var editada = enviar("PUT", local, "{\"profissionalId\":8,\"dataPrevistaAlta\":\"" + hoje.plusDays(10)
@@ -61,7 +72,12 @@ class InternacaoApiTest {
         var alta = enviar("PATCH", local + "/alta", "{\"dataEfetivaAlta\":\"" + hoje + "\",\"observacoes\":\"Estável\"}");
         assertEquals(200, alta.statusCode(), alta.body());
         assertTrue(alta.body().contains("\"situacao\":\"FINALIZADA\""));
+        assertTrue(alta.body().contains("\"historicoQuartos\":["));
+        assertTrue(alta.body().contains("\"numeroQuarto\":6001"));
+        assertTrue(alta.body().contains("\"numeroQuarto\":6002"));
         assertEquals(0, quartos.buscar(destino).ocupacaoAtual());
+        quartos.excluir(origem);
+        assertTrue(enviar("GET", local, null).body().contains("\"numeroQuarto\":6001"));
         assertEquals(409, enviar("PATCH", local + "/alta", "{\"dataEfetivaAlta\":\"" + hoje + "\"}").statusCode());
         assertEquals(409, enviar("PUT", local, "{\"profissionalId\":8,\"dataPrevistaAlta\":\"" + hoje + "\"}").statusCode());
     }

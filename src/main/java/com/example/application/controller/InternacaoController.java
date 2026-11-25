@@ -49,8 +49,8 @@ public class InternacaoController {
 
     @PutMapping("/{id}")
     public InternacaoResponse atualizar(@PathVariable long id, @RequestBody AtualizacaoInternacaoRequest dados) {
-        return InternacaoResponse.de(service.atualizar(id, dados.getProfissionalId(),
-            dados.getDataPrevistaAlta(), dados.getObservacoes()));
+        return InternacaoResponse.de(service.editar(id, dados.getProfissionalId(),
+            dados.getDataPrevistaAlta(), dados.getObservacoes(), dados.getQuartoId()));
     }
 
     @PatchMapping("/{id}/transferencia")
