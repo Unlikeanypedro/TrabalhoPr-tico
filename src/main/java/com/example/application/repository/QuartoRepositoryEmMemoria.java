@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
 import com.example.application.model.Quarto;
 
-@Repository
 public class QuartoRepositoryEmMemoria implements QuartoRepository {
     private final Map<Long, Quarto> quartos = new HashMap<>();
     private long sequencia;

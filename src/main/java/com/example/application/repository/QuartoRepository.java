@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.example.application.model.Quarto;
 
 public interface QuartoRepository {
+    default void bloquearAlteracoes() {}
     long proximoId();
     List<Quarto> listar();
     Optional<Quarto> buscarPorId(long id);
