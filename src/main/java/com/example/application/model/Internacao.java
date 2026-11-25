@@ -1,6 +1,8 @@
 package com.example.application.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import com.example.application.exception.ConflitoException;
 import com.example.application.utils.InternacaoValidacao;
 
@@ -24,6 +26,7 @@ public class Internacao {
     private LocalDate dataPrevistaAlta;
     private LocalDate dataEfetivaAlta;
     private String observacoes;
+    private final List<EstadiaQuarto> historicoQuartos = new ArrayList<>();
     private SituacaoInternacao situacao = SituacaoInternacao.ATIVA;
 
     public Internacao(long id, Long pacienteId, Long profissionalId, Long quartoId,
@@ -53,6 +56,46 @@ public class Internacao {
         this.dataEfetivaAlta = origem.dataEfetivaAlta;
         this.observacoes = origem.observacoes;
         this.situacao = origem.situacao;
+        this.historicoQuartos.addAll(origem.historicoQuartos);
+    }
+
+    public static Internacao restaurar(long id, long pacienteId, long profissionalId, long quartoId,
+            LocalDate dataEntrada, LocalDate dataPrevistaAlta, LocalDate dataEfetivaAlta,
+            String observacoes, List<EstadiaQuarto> historico) {
+        Internacao internacao = new Internacao(id, pacienteId, profissionalId, quartoId, dataEntrada,
+            dataPrevistaAlta, observacoes);
+        internacao.dataEfetivaAlta = dataEfetivaAlta;
+        if (dataEfetivaAlta != null) {
+            internacao.situacao = SituacaoInternacao.FINALIZADA;
+        }
+        internacao.historicoQuartos.addAll(historico);
+        return internacao;
+    }
+
+    public void registrarEstadia(Quarto quarto, LocalDate entradaNoQuarto) {
+        exigirAtiva("registrar estadia para");
+        if (quarto.getId() != quartoId) {
+            throw new IllegalArgumentException("O quarto informado não é o quarto atual da internação.");
+        }
+        encerrarEstadia(entradaNoQuarto);
+        historicoQuartos.add(new EstadiaQuarto(quartoId, quarto.getNumero(), entradaNoQuarto, null));
+    }
+
+    private void encerrarEstadia(LocalDate dataSaida) {
+        if (historicoQuartos.isEmpty()) {
+            return;
+        }
+        int ultima = historicoQuartos.size() - 1;
+        EstadiaQuarto estadia = historicoQuartos.get(ultima);
+        if (dataSaida.isBefore(estadia.getDataEntrada())) {
+            throw new IllegalArgumentException("A saída não pode ser anterior à entrada no quarto atual.");
+        }
+        historicoQuartos.set(ultima, new EstadiaQuarto(estadia.getQuartoId(), estadia.getNumeroQuarto(),
+            estadia.getDataEntrada(), dataSaida));
+    }
+
+    public List<EstadiaQuarto> getHistoricoQuartos() {
+        return List.copyOf(historicoQuartos);
     }
 
     public Internacao copia() { return new Internacao(this); }
@@ -83,11 +126,14 @@ public class Internacao {
             throw new ConflitoException("Esta internação já recebeu alta.");
         InternacaoValidacao.validarDataAlta(dataEntrada, dataAlta);
         String texto = InternacaoValidacao.normalizarObservacoes(observacaoAlta);
+        String novasObservacoes = observacoes;
         if (!texto.isEmpty()) {
             String linha = "Alta: " + texto;
-            this.observacoes = InternacaoValidacao.normalizarObservacoes(
+            novasObservacoes = InternacaoValidacao.normalizarObservacoes(
                 observacoes.isEmpty() ? linha : observacoes + "\n" + linha);
         }
+        encerrarEstadia(dataAlta);
+        this.observacoes = novasObservacoes;
         this.dataEfetivaAlta = dataAlta;
         this.situacao = SituacaoInternacao.FINALIZADA;
     }

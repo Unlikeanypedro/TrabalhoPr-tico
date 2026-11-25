@@ -3,6 +3,7 @@ package com.example.application.model;
 import java.util.HashSet;
 import java.util.Set;
 import com.example.application.exception.ConflitoException;
+import com.example.application.exception.QuartoSemVagasException;
 import com.example.application.utils.QuartoValidacao;
 
 public class Quarto {
@@ -41,7 +42,7 @@ public class Quarto {
         validarInternacao(internacaoId);
         if (internacoesAtivas.contains(internacaoId))
             throw new ConflitoException("Internação já ocupa este quarto.");
-        if (!estaDisponivel()) throw new ConflitoException("Quarto sem vagas disponíveis.");
+        if (!estaDisponivel()) throw new QuartoSemVagasException();
         internacoesAtivas.add(internacaoId);
     }
 
