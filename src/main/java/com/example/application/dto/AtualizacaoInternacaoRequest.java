@@ -5,6 +5,7 @@ import java.time.LocalDate;
 /** Corpo do PUT /internacoes/{id}: o que pode mudar enquanto a internação está ativa. */
 public class AtualizacaoInternacaoRequest {
     private Long profissionalId;
+    private Long quartoId;
     private LocalDate dataPrevistaAlta;
     private String observacoes;
 
@@ -16,4 +17,6 @@ public class AtualizacaoInternacaoRequest {
     public void setDataPrevistaAlta(LocalDate dataPrevistaAlta) { this.dataPrevistaAlta = dataPrevistaAlta; }
     public String getObservacoes() { return observacoes; }
     public void setObservacoes(String observacoes) { this.observacoes = observacoes; }
+    public Long getQuartoId() { return quartoId; }
+    public void setQuartoId(Long quartoId) { this.quartoId = quartoId; }
 }

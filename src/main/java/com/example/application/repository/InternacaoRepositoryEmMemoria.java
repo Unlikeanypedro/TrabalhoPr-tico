@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
 import com.example.application.model.Internacao;
 
-@Repository
 public class InternacaoRepositoryEmMemoria implements InternacaoRepository {
     private final Map<Long, Internacao> internacoes = new HashMap<>();
     private long sequencia;

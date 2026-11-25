@@ -1,6 +1,8 @@
 package com.example.application.dto;
 
 import java.time.LocalDate;
+import java.util.List;
+import com.example.application.model.EstadiaQuarto;
 import com.example.application.model.Internacao;
 import com.example.application.model.SituacaoInternacao;
 
@@ -14,10 +16,11 @@ public class InternacaoResponse {
     private final LocalDate dataEfetivaAlta;
     private final String observacoes;
     private final SituacaoInternacao situacao;
+    private final List<EstadiaQuarto> historicoQuartos;
 
     public InternacaoResponse(long id, long pacienteId, long profissionalId, long quartoId,
             LocalDate dataEntrada, LocalDate dataPrevistaAlta, LocalDate dataEfetivaAlta,
-            String observacoes, SituacaoInternacao situacao) {
+            String observacoes, SituacaoInternacao situacao, List<EstadiaQuarto> historicoQuartos) {
         this.id = id;
         this.pacienteId = pacienteId;
         this.profissionalId = profissionalId;
@@ -27,6 +30,7 @@ public class InternacaoResponse {
         this.dataEfetivaAlta = dataEfetivaAlta;
         this.observacoes = observacoes;
         this.situacao = situacao;
+        this.historicoQuartos = List.copyOf(historicoQuartos);
     }
 
     public long getId() { return id; }
@@ -39,9 +43,18 @@ public class InternacaoResponse {
     public String getObservacoes() { return observacoes; }
     public SituacaoInternacao getSituacao() { return situacao; }
 
+    public List<EstadiaQuarto> getHistoricoQuartos() { return historicoQuartos; }
+
+    public Integer getNumeroQuartoRegistrado() {
+        if (historicoQuartos.isEmpty()) {
+            return null;
+        }
+        return historicoQuartos.get(historicoQuartos.size() - 1).getNumeroQuarto();
+    }
+
     public static InternacaoResponse de(Internacao i) {
         return new InternacaoResponse(i.getId(), i.getPacienteId(), i.getProfissionalId(), i.getQuartoId(),
             i.getDataEntrada(), i.getDataPrevistaAlta(), i.getDataEfetivaAlta(), i.getObservacoes(),
-            i.getSituacao());
+            i.getSituacao(), i.getHistoricoQuartos());
     }
 }
