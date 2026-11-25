@@ -95,12 +95,12 @@ class ConsultaApiTest {
         var resposta = enviar("GET", local, null);
         assertEquals(200, resposta.statusCode());
         var dados = mapper.readTree(resposta.body());
-        assertEquals("ROTINA", dados.get("tipo").asText());
-        assertEquals("AGENDADA", dados.get("situacao").asText());
+        assertEquals("ROTINA", dados.get("tipo").asString());
+        assertEquals("AGENDADA", dados.get("situacao").asString());
         assertEquals(910, dados.get("pacienteId").asLong());
         assertEquals(901, dados.get("medicoId").asLong());
-        assertEquals("Avaliação geral", dados.get("motivo").asText());
-        assertEquals("", dados.get("observacoes").asText());
+        assertEquals("Avaliação geral", dados.get("motivo").asString());
+        assertEquals("", dados.get("observacoes").asString());
         assertTrue(dados.get("especialidade").isNull());
         assertTrue(dados.get("prioridade").isNull());
         String atualizacao = """
@@ -117,7 +117,7 @@ class ConsultaApiTest {
             mapper
                 .readTree(enviar("GET", local, null).body())
                 .get("motivo")
-                .asText()
+                .asString()
         );
         assertEquals(204, enviar("DELETE", local, null).statusCode());
         verificarErro(404, enviar("GET", local, null));
@@ -157,9 +157,9 @@ class ConsultaApiTest {
         );
         var lista = mapper.readTree(enviar("GET", "/consultas", null).body());
         assertEquals(3, lista.size());
-        assertEquals("ROTINA", lista.get(0).get("tipo").asText());
-        assertEquals("ESPECIALIZADA", lista.get(1).get("tipo").asText());
-        assertEquals("CRITICA", lista.get(2).get("prioridade").asText());
+        assertEquals("ROTINA", lista.get(0).get("tipo").asString());
+        assertEquals("ESPECIALIZADA", lista.get(1).get("tipo").asString());
+        assertEquals("CRITICA", lista.get(2).get("prioridade").asString());
         var filtrada = enviar(
             "GET",
             "/consultas?data=2026-11-20&medicoId=902&tipo=ESPECIALIZADA&situacao=CONFIRMADA",
@@ -173,7 +173,7 @@ class ConsultaApiTest {
                 .readTree(filtrada.body())
                 .get(0)
                 .get("especialidade")
-                .asText()
+                .asString()
         );
         assertEquals(
             2,
@@ -263,8 +263,8 @@ class ConsultaApiTest {
             enviar("PATCH", local + "/observacoes", "{\"observacoes\":\" \"}")
         );
         var salva = mapper.readTree(enviar("GET", local, null).body());
-        assertEquals("CONCLUIDA", salva.get("situacao").asText());
-        assertEquals("Avaliação realizada", salva.get("observacoes").asText());
+        assertEquals("CONCLUIDA", salva.get("situacao").asString());
+        assertEquals("Avaliação realizada", salva.get("observacoes").asString());
         assertEquals(
             200,
             enviar(
@@ -306,7 +306,7 @@ class ConsultaApiTest {
             mapper
                 .readTree(enviar("GET", nova, null).body())
                 .get("situacao")
-                .asText()
+                .asString()
         );
     }
 
